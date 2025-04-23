@@ -1,0 +1,59 @@
+import java.util.Random;
+
+public class WSSMap {
+    public enum Difficulty { EASY, MEDIUM, HARD }
+
+    private final int width;
+    private final int height;
+    private final Tile[][] grid;
+    private final Random random = new Random();
+
+    public WSSMap(int width, int height, Difficulty difficulty) {
+        this.width = width;
+        this.height = height;
+        grid = new Tile[height][width];
+        generateMap(difficulty);
+    }
+
+    private void generateMap(Difficulty difficulty) {
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                grid[r][c] = new Tile(randomTerrain(difficulty));
+            }
+        }
+    }
+
+    private TerrainType randomTerrain(Difficulty difficulty) {
+        int roll = random.nextInt(100);
+        switch (difficulty) {
+            case EASY:
+                if (roll < 50) return TerrainType.PLAINS;
+                if (roll < 70) return TerrainType.FOREST;
+                if (roll < 85) return TerrainType.DESERT;
+                if (roll < 95) return TerrainType.SWAMP;
+                return TerrainType.MOUNTAIN;
+            case MEDIUM:
+                if (roll < 30) return TerrainType.PLAINS;
+                if (roll < 55) return TerrainType.FOREST;
+                if (roll < 75) return TerrainType.DESERT;
+                if (roll < 90) return TerrainType.SWAMP;
+                return TerrainType.MOUNTAIN;
+            case HARD:
+                if (roll < 20) return TerrainType.PLAINS;
+                if (roll < 40) return TerrainType.FOREST;
+                if (roll < 65) return TerrainType.DESERT;
+                if (roll < 90) return TerrainType.SWAMP;
+                return TerrainType.MOUNTAIN;
+            default:
+                return TerrainType.PLAINS;
+        }
+    }
+
+    public Tile getTile(int row, int col) {
+        if (row < 0 || row >= height || col < 0 || col >= width) return null;
+        return grid[row][col];
+    }
+
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+}
