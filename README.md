@@ -9,4 +9,4 @@ Team 1 <br>
 ____________________________________________
 
 # To Run
-Assuming VSCode, right click the file in the Explorer tab and click "Run Java"
+Assuming VSCode, right click the WSSGame.java file in the Explorer tab and click "Run Java." Must have all the files in the same directory.
