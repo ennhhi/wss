@@ -17,9 +17,9 @@ public class MapPanel extends JPanel {
             for (int c = 0; c < map.getWidth(); c++) {
                 Tile tile = map.getTile(r, c);
                 g.setColor(tile.getTerrain().getColor());
-                g.fillRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                g.fillRect(c * CELL_SIZE, (map.getHeight() - r - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 g.setColor(Color.BLACK);
-                g.drawRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                g.drawRect(c * CELL_SIZE, (map.getHeight() - r - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }
     }
