@@ -1,3 +1,4 @@
+import java.awt.FlowLayout;
 import javax.swing.*;
 
 public class WSSGame {
@@ -15,10 +16,13 @@ public class WSSGame {
             int height = Integer.parseInt(hStr);
             WSSMap.Difficulty diff = WSSMap.Difficulty.valueOf(options[diffChoice]);
 
+            
             WSSMap map = new WSSMap(width, height, diff);
+            MapPanel mapPanel = new MapPanel(map);
             JFrame frame = new JFrame("Wilderness Survival Map");
+            frame.getContentPane().setLayout(new FlowLayout());
             frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-            frame.add(new MapPanel(map));
+            frame.add(mapPanel);
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
