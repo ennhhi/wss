@@ -1,6 +1,10 @@
 public abstract class Trader {
     int patienceLevel;
-    String[] items;
+    int food;
+    int water;
+    int gold;
+
+    boolean isTrading=true;
 
     public Trader(){
         
@@ -22,11 +26,27 @@ public abstract class Trader {
         this.patienceLevel = patienceLevel;
     }
 
-    public String[] getItems() {
-        return items;
+    public int getFood() {
+        return food;
     }
 
-    public void setItems(String[] items) {
-        this.items = items;
+    public void setFood(int food) {
+        this.food = food;
+    }
+
+    public int getWater() {
+        return water;
+    }
+
+    public void setWater(int water) {
+        this.water = water;
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 }
