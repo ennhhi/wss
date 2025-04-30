@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public abstract class Trader {
     private int patienceLevel;
     private int food;
@@ -6,6 +8,7 @@ public abstract class Trader {
     private boolean isTrading;
     private Offer offer;
     private Offer counterOffer;
+    private final Random random = new Random();
 
     public Trader(){
         this.patienceLevel = 0;
@@ -25,42 +28,48 @@ public abstract class Trader {
         offer=null;
     }
 
-    public void evaluateTrade(){
+    public Offer evaluateTrade(){
         int weight=0;
+        boolean successful=false;
+        Offer trade= new Offer();
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
-            if( (offer.getWantFood() - offer.getOfferFood()) > food){
-                patienceLevel--;
-            }
-
-            if( (offer.getWantWater() - offer.getOfferWater()) >water){
-                patienceLevel--;
-            }
-
-            if( (offer.getWantGold() - offer.getOfferGold()) >gold){
-                patienceLevel--;
-            }
 
             weight+= offer.getOfferFood()-offer.getWantFood();
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
             
+            int roll = random.nextInt(100);
+            if(-1 <= weight && weight < 2){
+                if(roll>=40){
+                    successful=true;
+                } else {
+                    patienceLevel--;
+                }
+            } else if(2 <= weight && weight < 4){
+                if(roll>=10){
+                    successful=true;
+                }
+            } else if(weight >= 4){
+                successful=true;
+            } else {
+                patienceLevel--;
+            }
+
+            if(successful){
+                trade.setOfferFood(offer.getWantFood()-offer.getOfferFood());
+                trade.setOfferWater(offer.getWantWater()-offer.getOfferWater());
+                trade.setOfferGold(offer.getWantGold()-offer.getOfferGold());
+            }
             
         } else {
             patienceLevel-=2;
-        }
-
-        if(0 < weight && weight < 3){
-
-        } else if(weight >= 3){
-            
-        } else {
-            patienceLevel--;
-        }
+        }        
 
         if(patienceLevel<=0 ){
             quitNegotiation();
         }
+        return trade;
     }
 
     public void counter_offer(){
