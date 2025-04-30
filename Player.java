@@ -2,13 +2,29 @@ public abstract class Player {
     int max_food;
     int max_water;
     int max_strength;
-    int current_gold;
     int current_food;
     int current_water;
     int current_strength;
+    int current_gold;
 
     Player(){
+        max_food = 0;
+        max_water = 0;
+        max_strength = 0;
+        current_food = 0;
+        current_water = 0;
+        current_strength = 0;
+        current_gold = 0;
+    }
         
+    Player(int food, int water, int strength, int gold){
+        max_food = food;
+        max_water = water;
+        max_strength = strength;
+        current_food = food;
+        current_water = water;
+        current_strength = strength;
+        current_gold = gold;
     }
 
     public int getMax_food() {
@@ -65,6 +81,51 @@ public abstract class Player {
 
     public void setCurrent_strength(int current_strength) {
         this.current_strength = current_strength;
+    }
+
+    public void collect(Tile tile){
+        current_food += tile.getFood();
+        current_water += tile.getWater();
+        current_gold += tile.getGold();
+        current_strength += tile.getStrength();
+        if(!tile.getRepeatableFood()){
+            tile.setFood(0);
+        }
+        if(!tile.getRepeatableWater()){
+            tile.setWater(0);
+        }
+        if(!tile.getRepeatableGold()){
+            tile.setGold(0);
+        }
+        if(!tile.getRepeatableStrength()){
+            tile.setStrength(0);
+        }
+        checkValues(current_food, current_water, current_strength);
+    }
+
+    public void checkValues(int food, int water, int strength){
+        if(food > max_food){
+            food = max_food;
+        }
+        if(water > max_water){
+            water = max_water;
+        }
+        if(strength > max_strength){
+            strength = max_strength;
+        }
+        
+    }
+
+    public void suggestTrade(Trader trader){
+
+    }
+
+    public void rest(){
+
+    }
+
+    public void move(){
+
     }
 
 }

@@ -1,5 +1,4 @@
-//Player that has average stats 
-public class BalancedPlayer extends Player{
+public class RichPlayer extends Player{
     int max_food;
     int max_water;
     int max_strength;
@@ -8,7 +7,7 @@ public class BalancedPlayer extends Player{
     int current_water;
     int current_strength;
 
-    BalancedPlayer(){
-        super(15, 15, 15, 0);
+    RichPlayer(int food, int water, int strength){
+        super(10, 10, 15,30);
     }
 }
