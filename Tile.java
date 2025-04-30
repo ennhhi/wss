@@ -59,21 +59,18 @@ public class Tile {
     public int getGold() { 
         return gold; 
     }
-    public boolean hasRepeatableBonus() { 
-        return repeatableBonus; 
-    }
+    
+      public int getStrength() {
+          return strength;
+      }   
 
     public boolean hasTrader() {
-        return trader != null;
+        return (trader != null);
     }
 
     public Trader getTrader() {
         return trader;
     }
-  
-    public int getStrength() {
-        return strength;
-    }   
 
     public void setFood(int food) {
         this.food = food;
@@ -105,10 +102,6 @@ public class Tile {
 
     public boolean getRepeatableStrength(){
         return repeatableStrength;
-    }
-
-    public boolean hasTrader() {
-        return trader != null;
     }
 
 }

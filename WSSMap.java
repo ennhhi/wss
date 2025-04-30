@@ -65,12 +65,15 @@ public class WSSMap {
 
     private void generateItems(Tile tile, Difficulty difficulty) {
         if (random.nextInt(100) < 1) {
-            tile.setTrader(new Trader());
+            //tile.setTrader(new Trader()); //Cannot create a trader, replace with trader subclass once finished
             return;
         }
 
-        int foodBonus = 0, waterBonus = 0, goldBonus = 0;
-        boolean repeatable = false;
+        int foodBonus = 0, waterBonus = 0, goldBonus = 0, strengthBonus = 0;
+        boolean repeatableFood = false;
+        boolean repeatableWater = false;
+        boolean repeatableStrength = false;
+        boolean repeatableGold = false;
         int itemRate;
 
         switch (difficulty) {
@@ -86,10 +89,25 @@ public class WSSMap {
             waterBonus = random.nextInt(3) + 3;
         if (random.nextInt(100) < itemRate)
             goldBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate)
+            strengthBonus = random.nextInt(3) + 3;
 
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0) && random.nextInt(100) < 20)
-            repeatable = true;
-
-        tile.setBonuses(foodBonus, waterBonus, goldBonus, repeatable);
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+            repeatableFood = true;
+        }
+        
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+            repeatableWater = true;
+        }
+        
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+            repeatableStrength = true;
+        }
+        
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+            repeatableGold = true;
+        }
+        
+        tile.setBonuses(foodBonus, waterBonus, goldBonus, strengthBonus, repeatableFood, repeatableWater, repeatableStrength, repeatableGold);
     }
 }
