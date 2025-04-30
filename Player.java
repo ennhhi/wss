@@ -121,16 +121,18 @@ public abstract class Player {
         
     }
 
-    public void suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
+    public Offer suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
+        Offer trade = null;
         if(trader.isTrading()){
             Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
             trader.setOffer(offer);
-            Offer trade = trader.evaluateTrade();
+            trade = trader.evaluateTrade();
             setCurrent_food(getCurrent_food() + trade.getOfferFood());
             setCurrent_water(getCurrent_water() + trade.getOfferWater());
             setCurrent_gold(getCurrent_gold() + trade.getOfferGold());
             checkValues(getCurrent_food(), getCurrent_water(), getCurrent_gold());
         }
+        return trade;
     }
 
     public void rest(){

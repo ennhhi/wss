@@ -31,7 +31,7 @@ public abstract class Trader {
     public Offer evaluateTrade(){
         int weight=0;
         boolean successful=false;
-        Offer trade= new Offer();
+        Offer trade= null;
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
 
@@ -57,6 +57,7 @@ public abstract class Trader {
             }
 
             if(successful){
+                trade=new Offer();
                 trade.setOfferFood(offer.getWantFood()-offer.getOfferFood());
                 trade.setOfferWater(offer.getWantWater()-offer.getOfferWater());
                 trade.setOfferGold(offer.getWantGold()-offer.getOfferGold());
