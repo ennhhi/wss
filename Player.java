@@ -121,8 +121,12 @@ public abstract class Player {
         
     }
 
-    public void suggestTrade(Trader trader){
-
+    public void suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
+        if(trader.isTrading()){
+            Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
+            trader.setOffer(offer);
+            trader.evaluateTrade();
+        }
     }
 
     public void rest(){
