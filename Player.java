@@ -1,11 +1,11 @@
 public abstract class Player {
-    int max_food;
-    int max_water;
-    int max_strength;
-    int current_food;
-    int current_water;
-    int current_strength;
-    int current_gold;
+    private int max_food;
+    private int max_water;
+    private int max_strength;
+    private int current_food;
+    private int current_water;
+    private int current_strength;
+    private int current_gold;
 
     Player(){
         max_food = 0;
@@ -88,18 +88,23 @@ public abstract class Player {
         current_water += tile.getWater();
         current_gold += tile.getGold();
         current_strength += tile.getStrength();
+
         if(!tile.getRepeatableFood()){
             tile.setFood(0);
         }
+
         if(!tile.getRepeatableWater()){
             tile.setWater(0);
         }
+
         if(!tile.getRepeatableGold()){
             tile.setGold(0);
         }
+
         if(!tile.getRepeatableStrength()){
             tile.setStrength(0);
         }
+
         checkValues(current_food, current_water, current_strength);
     }
 

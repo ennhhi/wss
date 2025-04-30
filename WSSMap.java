@@ -7,11 +7,13 @@ public class WSSMap {
     private final int height;
     private final Tile[][] grid;
     private final Random random = new Random();
+    Difficulty difficulty;
 
     public WSSMap(int width, int height, Difficulty difficulty) {
         this.width = width;
         this.height = height;
         grid = new Tile[height][width];
+        this.difficulty = difficulty;
         generateMap(difficulty);
     }
 
@@ -56,4 +58,5 @@ public class WSSMap {
 
     public int getWidth() { return width; }
     public int getHeight() { return height; }
+    public Difficulty getDifficulty(){ return difficulty; }
 }

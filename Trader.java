@@ -1,9 +1,9 @@
 public abstract class Trader {
-    int patienceLevel;
-    int food;
-    int water;
-    int gold;
-    boolean isTrading;
+    private int patienceLevel;
+    private int food;
+    private int water;
+    private int gold;
+    private boolean isTrading;
 
     public Trader(){
         this.patienceLevel = 0;
@@ -59,5 +59,9 @@ public abstract class Trader {
 
     public void setGold(int gold) {
         this.gold = gold;
+    }
+
+    public boolean isTrading() {
+        return isTrading;
     }
 }
