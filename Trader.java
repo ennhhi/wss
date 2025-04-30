@@ -35,28 +35,21 @@ public abstract class Trader {
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
             
-            int roll = random.nextInt(100);
-            if(-1 <= weight && weight < 2){
-                if(roll>=40){
-                    successful=true;
-                } else {
-                    patienceLevel--;
-                }
-            } else if(2 <= weight && weight < 4){
-                if(roll>=10){
-                    successful=true;
-                }
-            } else if(weight >= 4){
-                successful=true;
-            } else {
-                patienceLevel--;
-            }
+            successful = roll(weight);
 
             if(successful){
                 trade=new Offer();
                 trade.setOfferFood(offer.getWantFood()-offer.getOfferFood());
                 trade.setOfferWater(offer.getWantWater()-offer.getOfferWater());
                 trade.setOfferGold(offer.getWantGold()-offer.getOfferGold());
+            } else {
+                trade = new Offer();
+                while(weight<=3){
+                    trade.setOfferFood(offer.getWantFood()-offer.getOfferFood()-1);
+                    trade.setOfferWater(offer.getWantWater()-offer.getOfferWater()-1);
+                    trade.setOfferGold(offer.getWantGold()-offer.getOfferGold()-1);
+                    weight+=3;
+                }
             }
             
         } else {
@@ -67,6 +60,27 @@ public abstract class Trader {
             quitNegotiation();
         }
         return trade;
+    }
+
+    private boolean roll( int weight){
+        int roll = random.nextInt(100);
+        boolean successful = false;
+        if(-1 <= weight && weight < 2){
+            if(roll>=40){
+                successful=true;
+            } else {
+                patienceLevel--;
+            }
+        } else if(2 <= weight && weight < 4){
+            if(roll>=10){
+                successful=true;
+            }
+        } else if(weight >= 4){
+            successful=true;
+        } else {
+            patienceLevel--;
+        }
+        return successful;
     }
 
     public void counter_offer(){
