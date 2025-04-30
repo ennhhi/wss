@@ -125,8 +125,7 @@ public abstract class Player {
         Offer trade = null;
         if(trader.isTrading()){
             Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
-            trader.setOffer(offer);
-            trade = trader.evaluateTrade();
+            trade = trader.evaluateTrade(offer);
             setCurrent_food(getCurrent_food() + trade.getOfferFood());
             setCurrent_water(getCurrent_water() + trade.getOfferWater());
             setCurrent_gold(getCurrent_gold() + trade.getOfferGold());

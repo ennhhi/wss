@@ -6,8 +6,6 @@ public abstract class Trader {
     private int water;
     private int gold;
     private boolean isTrading;
-    private Offer offer;
-    private Offer counterOffer;
     private final Random random = new Random();
 
     public Trader(){
@@ -16,7 +14,6 @@ public abstract class Trader {
         this.water = 0;
         this.gold = 0;
         isTrading = true;
-        offer=null;
     }
     
     public Trader(int patienceLevel, int food, int water, int gold){
@@ -25,10 +22,9 @@ public abstract class Trader {
         this.water = water;
         this.gold = gold;
         isTrading = true;
-        offer=null;
     }
 
-    public Offer evaluateTrade(){
+    public Offer evaluateTrade(Offer offer){
         int weight=0;
         boolean successful=false;
         Offer trade= null;
@@ -115,13 +111,5 @@ public abstract class Trader {
 
     public boolean isTrading() {
         return isTrading;
-    }
-
-    public Offer getOffer() {
-        return offer;
-    }
-
-    public void setOffer(Offer offer) {
-        this.offer = offer;
     }
 }
