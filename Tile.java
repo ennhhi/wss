@@ -5,6 +5,7 @@ public class Tile {
     private boolean repeatableWater;
     private boolean repeatableGold;
     private boolean repeatableStrength;
+
     private Trader trader;
 
     public Tile(TerrainType terrain) {
@@ -43,6 +44,10 @@ public class Tile {
         strength = strengthBonus;
     }
 
+    public void setTrader(Trader trader) {
+        this.trader = trader;
+    }
+
     public int getFood() { 
         return food; 
     }
@@ -54,7 +59,18 @@ public class Tile {
     public int getGold() { 
         return gold; 
     }
+    public boolean hasRepeatableBonus() { 
+        return repeatableBonus; 
+    }
 
+    public boolean hasTrader() {
+        return trader != null;
+    }
+
+    public Trader getTrader() {
+        return trader;
+    }
+  
     public int getStrength() {
         return strength;
     }   
