@@ -1,5 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class MapPanel extends JPanel {
     private final WSSMap map;
@@ -14,7 +14,6 @@ public class MapPanel extends JPanel {
         setupTilePanels();
     }
 
-    // Old map display function
     // @Override
     // protected void paintComponent(Graphics g) {
     //     super.paintComponent(g);
@@ -33,6 +32,7 @@ public class MapPanel extends JPanel {
         for (int r = map.getHeight() - 1; r >= 0; r--) {
             for (int c = 0; c < map.getWidth(); c++) {
                 tilePanels[r][c] = new JPanel();
+                tilePanels[r][c].setBackground(map.getTile(r, c).getTerrain().getColor());
                 tilePanels[r][c].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
                 add(tilePanels[r][c]);
@@ -45,9 +45,13 @@ public class MapPanel extends JPanel {
         for (int r = map.getHeight() - 1; r >= 0; r--) {
             for (int c = 0; c < map.getWidth(); c++) {
                 Tile tile = map.getTile(r, c);
-                TerrainType terrain = tile.getTerrain();
-                tilePanels[r][c].setBackground(tile.getTerrain().getColor());
+                tilePanels[r][c].removeAll();
 
+                TerrainType terrain = tile.getTerrain();
+                int tileFood = tile.getFood(), tileWater = tile.getWater(), tileGold = tile.getGold();
+                // tilePanels[r][c].setBackground(tile.getTerrain().getColor());
+
+                // Tooltip
                 String terrainString = terrain.name();
                 terrainString = terrainString.substring(0, 1).toUpperCase()
                 + terrainString.substring(1).toLowerCase();
@@ -55,11 +59,26 @@ public class MapPanel extends JPanel {
                 String tooltip = String.format(
                     "<html>%s<br>" +
                     "MoveCost: %d, FoodCost: %d, WaterCost: %d<br>" +
-                    "Food: %d, Water: %d, Gold: %d</html>", 
+                    ((tile.hasRepeatableBonus()) ? "Repeating Bonus!<br>" : "") +
+                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Gold: %d</html>"), 
                 terrainString, terrain.getMoveCost(), terrain.getFoodCost(), terrain.getWaterCost(),
-                tile.getFood(), tile.getWater(), tile.getWater());
+                tileFood, tileWater, tileGold);
 
                 tilePanels[r][c].setToolTipText(tooltip);
+
+                // Item Display
+                if (tile.hasTrader()) {
+                    tilePanels[r][c].add(new JLabel("T"));
+                }
+                else if (tileFood > 0 || tileWater > 0 || tileGold > 0) {
+                    String itemLabel = "";
+                    itemLabel += (tileFood > 0) ? "F" : "";
+                    itemLabel += (tileWater > 0) ? "W" : "";
+                    itemLabel += (tileGold > 0) ? "G" : "";
+                    itemLabel += (tile.hasRepeatableBonus()) ? "*" : "";
+    
+                    tilePanels[r][c].add(new JLabel(itemLabel));
+                }
             }
         }
     }

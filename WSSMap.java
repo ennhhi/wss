@@ -19,6 +19,7 @@ public class WSSMap {
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 grid[r][c] = new Tile(randomTerrain(difficulty));
+                generateItems(grid[r][c], difficulty);
             }
         }
     }
@@ -56,4 +57,35 @@ public class WSSMap {
 
     public int getWidth() { return width; }
     public int getHeight() { return height; }
+
+
+    private void generateItems(Tile tile, Difficulty difficulty) {
+        if (random.nextInt(100) < 1) {
+            tile.setTrader(new Trader());
+            return;
+        }
+
+        int foodBonus = 0, waterBonus = 0, goldBonus = 0;
+        boolean repeatable = false;
+        int itemRate;
+
+        switch (difficulty) {
+            case EASY -> itemRate = 8;
+            case MEDIUM -> itemRate = 5;
+            case HARD -> itemRate = 3;
+            default -> itemRate = 0;
+        }
+
+        if (random.nextInt(100) < itemRate)
+            foodBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate)
+            waterBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate)
+            goldBonus = random.nextInt(3) + 3;
+
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0) && random.nextInt(100) < 20)
+            repeatable = true;
+
+        tile.setBonuses(foodBonus, waterBonus, goldBonus, repeatable);
+    }
 }
