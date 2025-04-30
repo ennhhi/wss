@@ -59,13 +59,13 @@ public class MapPanel extends JPanel {
                 String tooltip = String.format(
                     "<html>%s<br>" +
                     "MoveCost: %d, FoodCost: %d, WaterCost: %d<br>" +
-                    ((tile.getRepeatableFood()) ? "Repeating Food Bonus!<br>" : "") +
-                    ((tile.getRepeatableWater()) ? "Repeating Water Bonus!<br>" : "") +
-                    ((tile.getRepeatableStrength()) ? "Repeating Strength Bonus!<br>" : "") +
-                    ((tile.getRepeatableGold()) ? "Repeating Gold Bonus!<br>" : "") +
-                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Gold: %d</html>"), 
+                    ((tile.getRepeatableFood() && tileFood > 0) ? "Repeating Food Bonus!<br>" : "") +
+                    ((tile.getRepeatableWater() && tileWater > 0) ? "Repeating Water Bonus!<br>" : "") +
+                    ((tile.getRepeatableStrength() && tileStrength > 0) ? "Repeating Strength Bonus!<br>" : "") +
+                    ((tile.getRepeatableGold() && tileGold > 0) ? "Repeating Gold Bonus!<br>" : "") +
+                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Strength: %d, Gold: %d</html>"), 
                 terrainString, terrain.getMoveCost(), terrain.getFoodCost(), terrain.getWaterCost(),
-                tileFood, tileWater, tileGold);
+                tileFood, tileWater, tileStrength, tileGold);
 
                 tilePanels[r][c].setToolTipText(tooltip);
 
@@ -75,14 +75,30 @@ public class MapPanel extends JPanel {
                 }
                 else if (tileFood > 0 || tileWater > 0 || tileGold > 0) {
                     String itemLabel = "";
-                    itemLabel += (tileFood > 0) ? "F" : "";
-                    itemLabel += (tile.getRepeatableFood()) ? "*" : "";
-                    itemLabel += (tileWater > 0) ? "W" : "";
-                    itemLabel += (tile.getRepeatableWater()) ? "*" : "";
-                    itemLabel += (tileStrength > 0) ? "S" : "";
-                    itemLabel += (tile.getRepeatableStrength()) ? "*" : "";
-                    itemLabel += (tileGold > 0) ? "G" : "";
-                    itemLabel += (tile.getRepeatableGold()) ? "*" : "";
+                    if(tileFood > 0){
+                        itemLabel += "F";
+                        if(tile.getRepeatableFood()){
+                            itemLabel += "*";
+                        }
+                    }
+                    if(tileWater > 0){
+                        itemLabel += "W";
+                        if(tile.getRepeatableWater()){
+                            itemLabel += "*";
+                        }
+                    }
+                    if(tileStrength > 0){
+                        itemLabel += "S";
+                        if(tile.getRepeatableStrength()){
+                            itemLabel += "*";
+                        }
+                    }
+                    if(tileGold > 0){
+                        itemLabel += "G";
+                        if(tile.getRepeatableGold()){
+                            itemLabel += "*";
+                        }
+                    }
     
                     tilePanels[r][c].add(new JLabel(itemLabel));
                 }
