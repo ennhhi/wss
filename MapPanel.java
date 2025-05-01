@@ -62,7 +62,7 @@ public class MapPanel extends JPanel {
                     ((tile.getRepeatableFood() && tileFood > 0) ? "Repeating Food Bonus!<br>" : "") +
                     ((tile.getRepeatableWater() && tileWater > 0) ? "Repeating Water Bonus!<br>" : "") +
                     ((tile.getRepeatableGold() && tileGold > 0) ? "Repeating Gold Bonus!<br>" : "") +
-                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Strength: %d, Gold: %d</html>"), 
+                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Gold: %d</html>"), 
                 terrainString, terrain.getMoveCost(), terrain.getFoodCost(), terrain.getWaterCost(),
                 tileFood, tileWater, tileGold);
 
