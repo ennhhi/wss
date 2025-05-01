@@ -14,7 +14,7 @@ public class WSSMap {
     public WSSMap(int width, int height, Difficulty difficulty) {
         this.width = width;
         this.height = height;
-        this.playerRow = 0; // Start player at top-left corner
+        this.playerRow = 0; 
         this.playerCol = 0;
         this.difficulty = difficulty;
         grid = new Tile[height][width];
