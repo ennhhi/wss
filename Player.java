@@ -108,7 +108,7 @@ public void checkValues(int food, int water, int strength) {
     if (strength > max_strength) strength = max_strength;
     if (food < 0) food = 0;
     if (water < 0) water = 0;
-    // strength CAN go below 0 → that’s okay, we handle in loop
+
     setCurrent_food(food);
     setCurrent_water(water);
     setCurrent_strength(strength);
