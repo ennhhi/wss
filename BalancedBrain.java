@@ -12,7 +12,7 @@ public class BalancedBrain extends Brain {
     @Override
     public void makeMove() {
         if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
-            System.out.println("Player has died!");
+            System.out.println("Player has died!"); //the print might be redundant as main() already does this
             System.exit(0);
         }
 

@@ -32,6 +32,7 @@ public class WSSGame {
             Vision vision = new CautiousVision(player, map);
             Brain brain = new BalancedBrain(player, vision, map);
 
+            //Game Loop Starts
             new Thread(() -> {
                 try {
                     for (int turn = 1; turn <= 50; turn++) {
@@ -69,14 +70,27 @@ public class WSSGame {
                         if (player.getCurrent_strength() <= 0) {
                             System.out.println("Strength is zero, player rests this turn (+2 strength).");
                             player.setCurrent_strength(player.getCurrent_strength() + 2);
-                        } else {
+
+
+                        }
+
+                        //exit condition
+                        if (map.getPlayerCol() == width-1){
+                            System.out.println("Player has reached the end!");
+                            break;
+                        }
+
+                        //continue making moves
+                        else {
                             brain.makeMove();
                         }
 
-                        if (turn > 0)
+                        if (turn > 0){ //always true can probably drop the if() condition
                             mapPanel.redrawTiles();
-                        
-                    }
+                        }
+
+
+                    } // end of Game Loop
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -29,8 +29,8 @@ public class CautiousVision extends Vision {
 
     private Path findClosest(String resource) {
         List<Direction> directions = List.of(Direction.NORTH, Direction.SOUTH, Direction.EAST);
-        for (Direction dir : directions) {
-            Tile tile = map.getTileInDirection(dir);
+        for (Direction dir : directions) {  //scans tiles in cardinal directions
+            Tile tile = map.getTileInDirection(dir); //retrieves specified tile object
             if (tile != null && hasResource(tile, resource)) {
                 return new Path(List.of(dir),
                         tile.getTerrain().getMoveCost(),
@@ -41,6 +41,7 @@ public class CautiousVision extends Vision {
         return null;
     }
 
+    //returns item bonus on a tile, if any
     private boolean hasResource(Tile tile, String resource) {
         return switch (resource) {
             case "water" -> tile.getWater() > 0;
@@ -50,6 +51,8 @@ public class CautiousVision extends Vision {
         };
     }
 
+    //returns coordinates and cost of moving to the tile with the lowest traversal cost
+    //in adjacent cardinal directions.  TODO: consider ordinal directions? (NORTHEAST, NORTHWEST, etc)
     private Path findLowestCost() {
         List<Direction> directions = List.of(Direction.NORTH, Direction.SOUTH, Direction.EAST);
         Path best = null;

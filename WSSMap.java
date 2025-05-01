@@ -11,10 +11,11 @@ public class WSSMap {
     private int playerCol;
     private final Difficulty difficulty;
 
+
     public WSSMap(int width, int height, Difficulty difficulty) {
         this.width = width;
         this.height = height;
-        this.playerRow = 0; 
+        this.playerRow = height/2; // roughly centers player on y-axis
         this.playerCol = 0;
         this.difficulty = difficulty;
         grid = new Tile[height][width];
@@ -84,31 +85,40 @@ public class WSSMap {
         tile.setBonuses(foodBonus, waterBonus, goldBonus, repeatableFood, repeatableWater, repeatableGold);
     }
 
+    //returns a tile object of the given coordinates
     public Tile getTile(int row, int col) {
+        //bounds check
         if (row < 0 || row >= height || col < 0 || col >= width) return null;
         return grid[row][col];
     }
 
+    //returns the tile object of a given offset relative to the player position
     public Tile getRelativeTile(int dRow, int dCol) {
         int newRow = playerRow + dRow;
         int newCol = playerCol + dCol;
+        //bounds check
         if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
             return grid[newRow][newCol];
         }
         return null;
     }
 
+    //returns 1 adjacent tile in a given direction
     public Tile getTileInDirection(Direction dir) {
         return getRelativeTile(dir.deltaRow(), dir.deltaCol());
     }
 
+    //updates player position
     public void movePlayer(Direction dir) {
         int newRow = playerRow + dir.deltaRow();
         int newCol = playerCol + dir.deltaCol();
         if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
             playerRow = newRow;
             playerCol = newCol;
+        } else{
+            System.out.println("Error: Player attempted to move out of bounds.");
         }
+
     }
 
     public int getPlayerRow() {
