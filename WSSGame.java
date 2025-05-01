@@ -27,8 +27,8 @@ public class WSSGame {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            // === Backend game runner (terminal output only) ===
-            Player player = new PreparedPlayer();  // make sure PreparedPlayer calls super(30, 30, 15, 0)
+          
+            Player player = new PreparedPlayer();  
             Vision vision = new CautiousVision(player, map);
             Brain brain = new BalancedBrain(player, vision, map);
 
@@ -63,7 +63,7 @@ public class WSSGame {
                             break;
                         }
 
-                        // === Rest check (if strength zero or below) ===
+                     =
                         if (player.getCurrent_strength() <= 0) {
                             System.out.println("Strength is zero, player rests this turn (+2 strength).");
                             player.setCurrent_strength(player.getCurrent_strength() + 2);
@@ -71,7 +71,7 @@ public class WSSGame {
                             brain.makeMove();
                         }
 
-                        Thread.sleep(2000);  // 2-second pause between turns
+                        Thread.sleep(2000);  =
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
