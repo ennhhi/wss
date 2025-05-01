@@ -69,10 +69,9 @@ public class WSSMap {
             return;
         }
 
-        int foodBonus = 0, waterBonus = 0, goldBonus = 0, strengthBonus = 0;
+        int foodBonus = 0, waterBonus = 0, goldBonus = 0;
         boolean repeatableFood = false;
         boolean repeatableWater = false;
-        boolean repeatableStrength = false;
         boolean repeatableGold = false;
         int itemRate;
 
@@ -89,25 +88,19 @@ public class WSSMap {
             waterBonus = random.nextInt(3) + 3;
         if (random.nextInt(100) < itemRate)
             goldBonus = random.nextInt(3) + 3;
-        if (random.nextInt(100) < itemRate)
-            strengthBonus = random.nextInt(3) + 3;
 
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
             repeatableFood = true;
         }
         
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
             repeatableWater = true;
         }
         
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
-            repeatableStrength = true;
-        }
-        
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 || strengthBonus != 0) && random.nextInt(100) < 20){
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
             repeatableGold = true;
         }
         
-        tile.setBonuses(foodBonus, waterBonus, goldBonus, strengthBonus, repeatableFood, repeatableWater, repeatableStrength, repeatableGold);
+        tile.setBonuses(foodBonus, waterBonus, goldBonus, repeatableFood, repeatableWater, repeatableGold);
     }
 }

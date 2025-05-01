@@ -48,7 +48,7 @@ public class MapPanel extends JPanel {
                 tilePanels[r][c].removeAll();
 
                 TerrainType terrain = tile.getTerrain();
-                int tileFood = tile.getFood(), tileWater = tile.getWater(), tileGold = tile.getGold(), tileStrength = tile.getStrength();
+                int tileFood = tile.getFood(), tileWater = tile.getWater(), tileGold = tile.getGold();
                 // tilePanels[r][c].setBackground(tile.getTerrain().getColor());
 
                 // Tooltip
@@ -61,11 +61,10 @@ public class MapPanel extends JPanel {
                     "MoveCost: %d, FoodCost: %d, WaterCost: %d<br>" +
                     ((tile.getRepeatableFood() && tileFood > 0) ? "Repeating Food Bonus!<br>" : "") +
                     ((tile.getRepeatableWater() && tileWater > 0) ? "Repeating Water Bonus!<br>" : "") +
-                    ((tile.getRepeatableStrength() && tileStrength > 0) ? "Repeating Strength Bonus!<br>" : "") +
                     ((tile.getRepeatableGold() && tileGold > 0) ? "Repeating Gold Bonus!<br>" : "") +
                     ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Strength: %d, Gold: %d</html>"), 
                 terrainString, terrain.getMoveCost(), terrain.getFoodCost(), terrain.getWaterCost(),
-                tileFood, tileWater, tileStrength, tileGold);
+                tileFood, tileWater, tileGold);
 
                 tilePanels[r][c].setToolTipText(tooltip);
 
@@ -84,12 +83,6 @@ public class MapPanel extends JPanel {
                     if(tileWater > 0){
                         itemLabel += "W";
                         if(tile.getRepeatableWater()){
-                            itemLabel += "*";
-                        }
-                    }
-                    if(tileStrength > 0){
-                        itemLabel += "S";
-                        if(tile.getRepeatableStrength()){
                             itemLabel += "*";
                         }
                     }

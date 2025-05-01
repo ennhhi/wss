@@ -87,7 +87,6 @@ public abstract class Player {
         current_food += tile.getFood();
         current_water += tile.getWater();
         current_gold += tile.getGold();
-        current_strength += tile.getStrength();
 
         if(!tile.getRepeatableFood()){
             tile.setFood(0);
@@ -99,10 +98,6 @@ public abstract class Player {
 
         if(!tile.getRepeatableGold()){
             tile.setGold(0);
-        }
-
-        if(!tile.getRepeatableStrength()){
-            tile.setStrength(0);
         }
 
         checkValues(current_food, current_water, current_strength);
@@ -141,7 +136,8 @@ public abstract class Player {
     }
 
     public void rest(){
-
+        setCurrent_strength(current_strength + 3);
+        checkValues(current_food, current_water, current_strength);
     }
 
     public void move(){

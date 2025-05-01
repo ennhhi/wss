@@ -1,20 +1,18 @@
 public class Tile {
     private TerrainType terrain;
-    private int food, water, gold, strength;
+    private int food, water, gold;
     private boolean repeatableFood;
     private boolean repeatableWater;
     private boolean repeatableGold;
-    private boolean repeatableStrength;
 
     private Trader trader;
 
     public Tile(TerrainType terrain) {
         this.terrain = terrain;
-        food = 0; water = 0; gold = 0; strength = 0;
+        food = 0; water = 0; gold = 0;
         repeatableFood = false;
         repeatableWater = false;
         repeatableGold = false;
-        repeatableStrength = false;
         trader = null;
     }
 
@@ -26,22 +24,19 @@ public class Tile {
         this.terrain = terrain;
     }
 
-    public void setBonuses(int foodBonus, int waterBonus, int goldBonus, int strengthBonus, boolean repeatableFood, boolean repeatableWater, boolean repeatableGold, boolean repeatableStrength) {
+    public void setBonuses(int foodBonus, int waterBonus, int goldBonus, boolean repeatableFood, boolean repeatableWater, boolean repeatableGold) {
         food = foodBonus;
         water = waterBonus;
         gold = goldBonus;
-        strength = strengthBonus;
         this.repeatableFood = repeatableFood;
         this.repeatableWater = repeatableWater;
         this.repeatableGold = repeatableGold;
-        this.repeatableStrength = repeatableStrength;
     }
 
-    public void setBonuses(int foodBonus, int waterBonus, int goldBonus, int strengthBonus) {
+    public void setBonuses(int foodBonus, int waterBonus, int goldBonus) {
         food = foodBonus;
         water = waterBonus;
         gold = goldBonus;
-        strength = strengthBonus;
     }
 
     public void setTrader(Trader trader) {
@@ -60,10 +55,6 @@ public class Tile {
         return gold; 
     }
     
-      public int getStrength() {
-          return strength;
-      }   
-
     public boolean hasTrader() {
         return (trader != null);
     }
@@ -84,10 +75,6 @@ public class Tile {
         this.gold = gold;
     }
 
-    public void setStrength(int strength) {
-        this.strength = strength;
-    }
-
     public boolean getRepeatableFood(){
         return repeatableFood;
     }
@@ -100,8 +87,16 @@ public class Tile {
         return repeatableGold;
     }
 
-    public boolean getRepeatableStrength(){
-        return repeatableStrength;
+    public void setRepeatableFood(boolean repeatableFood) {
+        this.repeatableFood = repeatableFood;
+    }
+
+    public void setRepeatableWater(boolean repeatableWater) {
+        this.repeatableWater = repeatableWater;
+    }
+
+    public void setRepeatableGold(boolean repeatableGold) {
+        this.repeatableGold = repeatableGold;
     }
 
 }
