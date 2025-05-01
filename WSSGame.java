@@ -27,74 +27,52 @@ public class WSSGame {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-          
             Player player = new PreparedPlayer();  
             Vision vision = new CautiousVision(player, map);
             Brain brain = new BalancedBrain(player, vision, map);
 
-            //Game Loop Starts
-            new Thread(() -> {
-                try {
-                    for (int turn = 1; turn <= 50; turn++) {
-                        Thread.sleep(2000); 
-                         
-                        System.out.println("Turn " + turn);
+            Tile startingTile = map.getTile(map.getPlayerRow(), map.getPlayerCol());
+            player.collect(startingTile);
+//Game Loop Starts
+ new Thread(() -> {
+    try {
+        for (int turn = 1; turn <= 50; turn++) {
+            System.out.println("Turn " + turn);
 
-                        int row = map.getPlayerRow();
-                        int col = map.getPlayerCol();
-                        Tile tile = map.getTile(row, col);
+            int row = map.getPlayerRow();
+            int col = map.getPlayerCol();
+            Tile tile = map.getTile(row, col);
 
-                        System.out.println("Player enters square " + row + "," + col +
-                            ", Strength:" + player.getCurrent_strength() +
-                            ", Food:" + player.getCurrent_food() +
-                            ", Water:" + player.getCurrent_water() +
-                            ", Gold:" + player.getCurrent_gold());
+            // === Death check (only food or water) ===
+            if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
+                System.out.println("Player has died!");
+                break;
+            }
 
-                        System.out.println("This location is " + tile.getTerrain());
+            if (player.getCurrent_strength() <= 0) {
+                System.out.println("Strength is zero, player rests this turn (+2 strength).");
+                player.setCurrent_strength(player.getCurrent_strength() + 2);
+                
+            //continue making moves
+            } else { 
+                brain.makeMove();
+            }
 
-                        if (tile.getGold() > 0) System.out.println("I see some gold here!");
-                        if (tile.getFood() > 0) System.out.println("I see some food here!");
-                        if (tile.getWater() > 0) System.out.println("I see some water here!");
-                        if (tile.hasTrader()) {
-                            System.out.println("There is a trader.");
-                            System.out.println("I have enough supplies, so I skip the trader.");
-                        }
+            mapPanel.redrawTiles();
 
-                        // === Death check (only food or water) ===
-                        if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
-                            System.out.println("Player has died!");
-                            break;
-                        }
+            // Check if player has reached the last column
+            if (map.getPlayerCol() == map.getWidth() - 1) {
+                System.out.println("Congratulations! You survived and reached the end!");
+                break;
+            }
 
-                     
-                        if (player.getCurrent_strength() <= 0) {
-                            System.out.println("Strength is zero, player rests this turn (+2 strength).");
-                            player.setCurrent_strength(player.getCurrent_strength() + 2);
-
-
-                        }
-
-                        //exit condition
-                        if (map.getPlayerCol() == width-1){
-                            System.out.println("Player has reached the end!");
-                            break;
-                        }
-
-                        //continue making moves
-                        else {
-                            brain.makeMove();
-                        }
-
-                        if (turn > 0){ //always true can probably drop the if() condition
-                            mapPanel.redrawTiles();
-                        }
-
-
-                    } // end of Game Loop
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            Thread.sleep(2000);
+        } // end of Game Loop
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}).start();
+          
         });
     }
 }
