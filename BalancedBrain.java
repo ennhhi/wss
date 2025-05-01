@@ -45,46 +45,52 @@ public class BalancedBrain extends Brain {
         if (chosenPath != null && chosenPath.getFirstStep() != null) {
             Direction step = chosenPath.getFirstStep();
             Tile target = map.getTileInDirection(step);
+            int moveCost = target.getTerrain().getMoveCost();
 
-            if (target != null) {
-                int prevFood = player.getCurrent_food();
-                int prevWater = player.getCurrent_water();
-                int prevStrength = player.getCurrent_strength();
+            if (player.getCurrent_strength() < moveCost) {
+                System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
+                player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
+                player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
+                player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
+                return;
+            }
 
-                player.setCurrent_strength(player.getCurrent_strength() - target.getTerrain().getMoveCost());
-                player.setCurrent_water(player.getCurrent_water() - target.getTerrain().getWaterCost());
-                player.setCurrent_food(player.getCurrent_food() - target.getTerrain().getFoodCost());
+            // Record the resources BEFORE collecting them
+            int goldBefore = target.getGold();
+            int foodBefore = target.getFood();
+            int waterBefore = target.getWater();
 
-                map.movePlayer(step);
-                player.collect(target);
+            player.setCurrent_strength(player.getCurrent_strength() - moveCost);
+            player.setCurrent_water(player.getCurrent_water() - target.getTerrain().getWaterCost());
+            player.setCurrent_food(player.getCurrent_food() - target.getTerrain().getFoodCost());
 
-                System.out.println("Player enters square " + map.getPlayerRow() + "," + map.getPlayerCol() +
-                        ", Strength:" + player.getCurrent_strength() +
-                        ", Food:" + player.getCurrent_food() +
-                        ", Water:" + player.getCurrent_water() +
-                        ", Gold:" + player.getCurrent_gold());
-                System.out.println("This location is " + target.getTerrain().name());
+            map.movePlayer(step);
+            player.collect(target);
 
-                int foodGain = player.getCurrent_food() - prevFood;
-                int waterGain = player.getCurrent_water() - prevWater;
-                int strengthGain = player.getCurrent_strength() - prevStrength;
+            int row = map.getPlayerRow();
+            int col = map.getPlayerCol();
 
-                if (foodGain > 0) System.out.println("Gained +" + foodGain + " food!");
-                if (waterGain > 0) System.out.println("Gained +" + waterGain + " water!");
-                if (strengthGain > 0) System.out.println("Gained +" + strengthGain + " strength!");
+            System.out.println("Player enters square " + row + "," + col +
+                    ", Strength:" + player.getCurrent_strength() +
+                    ", Food:" + player.getCurrent_food() +
+                    ", Water:" + player.getCurrent_water() +
+                    ", Gold:" + player.getCurrent_gold());
+            System.out.println("This location is " + target.getTerrain().name());
 
-                if (target.getGold() > 0) System.out.println("I see some gold here!");
-                if (target.hasTrader()) {
-                    if (player.getCurrent_food() > player.getMax_food() / 2 && player.getCurrent_water() > player.getMax_water() / 2) {
-                        System.out.println("There is a trader.\nI have enough supplies, so I skip the trader.");
-                    } else {
-                        System.out.println("There is a trader.\nMight consider trading here...");
-                    }
+            if (goldBefore > 0) System.out.println("Gained +" + goldBefore + " gold!");
+            if (foodBefore > 0) System.out.println("Gained +" + foodBefore + " food!");
+            if (waterBefore > 0) System.out.println("Gained +" + waterBefore + " water!");
+
+            if (target.hasTrader()) {
+                if (player.getCurrent_food() > player.getMax_food() / 2 && player.getCurrent_water() > player.getMax_water() / 2) {
+                    System.out.println("There is a trader. I have enough supplies, so I skip the trader.");
+                } else {
+                    System.out.println("There is a trader. Might consider trading here...");
                 }
             }
+
         } else {
-            System.out.println("Strength is zero, player rests this turn (+2 strength).");
-            player.rest();
+            System.out.println("BalancedBrain: No valid move. Resting this turn (+2 strength).");
             player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
             player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
             player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
