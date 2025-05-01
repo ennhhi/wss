@@ -63,7 +63,7 @@ public class WSSGame {
                             break;
                         }
 
-                     =
+                     
                         if (player.getCurrent_strength() <= 0) {
                             System.out.println("Strength is zero, player rests this turn (+2 strength).");
                             player.setCurrent_strength(player.getCurrent_strength() + 2);
