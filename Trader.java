@@ -83,7 +83,7 @@ public abstract class Trader {
         return successful;
     }
 
-    public void counter_offer(){
+    public void counterOffer(){
         
     }
     

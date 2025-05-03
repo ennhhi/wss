@@ -4,7 +4,7 @@ import javax.swing.*;
 public class WSSGame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            String wStr = JOptionPane.showInputDialog("Enter map width (e.g. 20):");
+            String wStr = JOptionPane.showInputDialog("Enter map length (e.g. 20):");
             String hStr = JOptionPane.showInputDialog("Enter map height (e.g. 10):");
             String[] options = { "EASY", "MEDIUM", "HARD" };
             int diffChoice = JOptionPane.showOptionDialog(
