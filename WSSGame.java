@@ -19,6 +19,40 @@ public class WSSGame {
             WSSMap map = new WSSMap(width, height, diff);
             MapPanel mapPanel = new MapPanel(map);
 
+            String[] playerTypes = { "Balanced", "Prepared", "Strong", "Rich" };
+            int pChoice = JOptionPane.showOptionDialog(
+                null, "Select Player:", "Player",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, playerTypes, playerTypes[0]);
+
+            Player playerSwitch;
+            switch (pChoice) {
+                case 1 -> playerSwitch = new PreparedPlayer(); // [`PreparedPlayer`](PreparedPlayer.java)
+                case 2 -> playerSwitch = new StrongPlayer(15,15,30); // [`StrongPlayer`](StrongPlayer.java)
+                case 3 -> playerSwitch = new RichPlayer(10,10,15);   // [`RichPlayer`](RichPlayer.java)
+                default -> playerSwitch = new BalancedPlayer();      // [`BalancedPlayer`](BalancedPlayer.java)
+            }
+
+            String[] visionTypes = { "Focused", "KeenEyed", "FarSight", "Cautious" };
+            int vChoice = JOptionPane.showOptionDialog(
+                null, "Select Vision:", "Vision",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, visionTypes, visionTypes[0]);
+
+            Vision visionSwitch;
+            switch (vChoice) {
+                case 1 -> visionSwitch = new KeenEyedVision(playerSwitch, map);  // [`KeenEyedVision`](KeenEyedVision.java)
+                case 2 -> visionSwitch = new FarSightVision(playerSwitch, map);  // [`FarSightVision`](FarSightVision.java)
+                case 3 -> visionSwitch = new CautiousVision(playerSwitch, map);  // [`CautiousVision`](CautiousVision.java)
+                default -> visionSwitch = new FocusedVision(playerSwitch, map);  // [`FocusedVision`](FocusedVision.java)
+            }
+
+            Brain brainSwitch = new BalancedBrain(playerSwitch, visionSwitch, map); // [`BalancedBrain`](BalancedBrain.java)
+
+            Player player = playerSwitch;
+            Vision vision = visionSwitch;
+            Brain brain = brainSwitch;
+
             JFrame frame = new JFrame("Wilderness Survival Map");
             frame.getContentPane().setLayout(new FlowLayout());
             frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -26,10 +60,6 @@ public class WSSGame {
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
-
-            Player player = new PreparedPlayer();  
-            Vision vision = new CautiousVision(player, map);
-            Brain brain = new BalancedBrain(player, vision, map);
 
             Tile startingTile = map.getTile(map.getPlayerRow(), map.getPlayerCol());
             player.collect(startingTile);
