@@ -37,6 +37,8 @@ public class WSSGame {
  new Thread(() -> {
     try {
         for (int turn = 1; turn <= 50; turn++) {
+            Thread.sleep(2000);
+
             System.out.println("Turn " + turn);
 
             int row = map.getPlayerRow();
@@ -66,7 +68,6 @@ public class WSSGame {
                 break;
             }
 
-            Thread.sleep(2000);
         } // end of Game Loop
     } catch (InterruptedException e) {
         e.printStackTrace();
