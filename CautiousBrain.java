@@ -1,32 +1,43 @@
 import java.util.List;
-
-public class BalancedBrain extends Brain {
+//keeps resources high
+public class CautiousBrain extends Brain{
 
     private Path rememberedWaterPath = null;
     private Path rememberedFoodPath = null;
 
-    public BalancedBrain(Player player, Vision vision, WSSMap map) {
+    public CautiousBrain(Player player, Vision vision, WSSMap map) {
         super(player, vision, map);
     }
 
     @Override
     public void makeMove() {
+        //player is dead; no need to continue with logic
         if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
-            //System.out.println("Player has died!"); //the print might be redundant as main() already does this
             System.exit(0);
         }
 
-        // Always update vision and memory
+
+        //maintain enough strength to move across any tile
+        if (player.getCurrent_strength() < 5) {
+            System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
+            player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
+            player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
+            player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
+            return;
+        }
+
+        //evaluate food and water options if < 50% of max
         Path waterPath = vision.closestWater();
-        if (waterPath != null) rememberedWaterPath = waterPath;
-
+        if (waterPath != null) {
+            rememberedWaterPath = waterPath;
+        }
         Path foodPath = vision.closestFood();
-        if (foodPath != null) rememberedFoodPath = foodPath;
-
+        if (foodPath != null) {
+            rememberedFoodPath = foodPath;
+        }
         Path chosenPath = null;
-
-        boolean needsWater = player.getCurrent_water() < player.getMax_water() / 3;
-        boolean needsFood = player.getCurrent_food() < player.getMax_food() / 3;
+        boolean needsWater = player.getCurrent_water() < player.getMax_water() / 2;
+        boolean needsFood = player.getCurrent_food() < player.getMax_food() / 2;
 
         if (needsWater && rememberedWaterPath != null) {
             chosenPath = rememberedWaterPath;
@@ -36,24 +47,17 @@ public class BalancedBrain extends Brain {
             Tile east = map.getRelativeTile(0, 1);
             if (east != null) {
                 chosenPath = new Path(List.of(Direction.EAST),
-                    east.getTerrain().getMoveCost(),
-                    east.getTerrain().getWaterCost(),
-                    east.getTerrain().getFoodCost());
+                        east.getTerrain().getMoveCost(),
+                        east.getTerrain().getWaterCost(),
+                        east.getTerrain().getFoodCost());
             }
         }
 
+        //move based on logic above
         if (chosenPath != null && chosenPath.getFirstStep() != null) {
             Direction step = chosenPath.getFirstStep();
             Tile target = map.getTileInDirection(step);
             int moveCost = target.getTerrain().getMoveCost();
-
-            if (player.getCurrent_strength() < moveCost) {
-                System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
-                player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
-                player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
-                player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
-                return;
-            }
 
             // Record the resources BEFORE collecting them
             int goldBefore = target.getGold();
@@ -88,12 +92,6 @@ public class BalancedBrain extends Brain {
                     System.out.println("There is a trader. Might consider trading here...");
                 }
             }
-
-        } else {
-            System.out.println("BalancedBrain: No valid move. Resting this turn (+2 strength).");
-            player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
-            player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
-            player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
         }
     }
 }

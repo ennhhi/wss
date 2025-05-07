@@ -136,6 +136,7 @@ public class WSSGame {
 
                 // TODO: Once more brain subtypes are added, add selection of brains.
                 brain = new BalancedBrain(player, vision, map);
+                brain = new CautiousBrain(player, vision, map);
 
                 turnSpeed = speedSlider.getValue();
 
