@@ -56,15 +56,15 @@ public class MapPanel extends JPanel {
 
                 tilePanels[r][c].setToolTipText(tooltip);
 
-                // Item Display
-                if (tile.hasTrader()) {
-                    tilePanels[r][c].add(new JLabel("T"));
-                }
-                else if (r == playerY && c == playerX) {
+                // Player/Item Display
+                if (r == playerY && c == playerX) {
                     JPanel playerPanel = new JPanel();
                     playerPanel.setBackground(Color.RED);
                     playerPanel.setPreferredSize(new Dimension(10, 10));
                     tilePanels[r][c].add(playerPanel);
+                }
+                else if (tile.hasTrader()) {
+                    tilePanels[r][c].add(new JLabel("T"));
                 }
                 else if (tileFood > 0 || tileWater > 0 || tileGold > 0) {
                     String itemLabel = "";
