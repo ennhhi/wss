@@ -60,8 +60,10 @@ public class WSSGame {
             // TODO: Once more brain subtypes are added, add more corresponding buttons.
             ButtonGroup brainButtons = new ButtonGroup();
             JRadioButton balancedBrainButton = new JRadioButton("Balanced");
+            JRadioButton cautiousBrainButton = new JRadioButton("Cautious");
             balancedBrainButton.setSelected(true);
             brainButtons.add(balancedBrainButton);
+            brainButtons.add(cautiousBrainButton);
 
             JSlider speedSlider = new JSlider(0, 3000, 2000);
             speedSlider.setMajorTickSpacing(500);
@@ -92,7 +94,7 @@ public class WSSGame {
 
             // TODO: Once more brain subtypes are added, add their buttons here.
             jfrm.add(createRow(new JLabel("Select Brain Type:")));
-            jfrm.add(createRow(balancedBrainButton));
+            jfrm.add(createRow(balancedBrainButton, cautiousBrainButton));
 
             jfrm.add(createRow(new JLabel("Set Game Speed (in seconds per turn):")));
             jfrm.add(createRow(speedSlider));
@@ -135,8 +137,10 @@ public class WSSGame {
                     vision = new CautiousVision(player, map);
 
                 // TODO: Once more brain subtypes are added, add selection of brains.
-                brain = new BalancedBrain(player, vision, map);
-                brain = new CautiousBrain(player, vision, map);
+                if (balancedBrainButton.isSelected()) 
+                    brain = new BalancedBrain(player, vision, map);
+                else 
+                    brain = new CautiousBrain(player, vision, map);
 
                 turnSpeed = speedSlider.getValue();
 
