@@ -114,6 +114,8 @@ public class WSSMap {
         int newRow = playerRow + dir.deltaRow();
         int newCol = playerCol + dir.deltaCol();
         if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
+            playerRow = newRow;
+            playerCol = newCol;
         } else {
             System.out.println("Error: Player attempted to move out of bounds.");
         }
