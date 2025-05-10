@@ -102,6 +102,7 @@ public abstract class Player {
 
         checkValues(current_food, current_water, current_strength);
     }
+
 public void checkValues(int food, int water, int strength) {
     if (food > max_food) food = max_food;
     if (water > max_water) water = max_water;
@@ -119,7 +120,7 @@ public void checkValues(int food, int water, int strength) {
         if(trader.isTrading()){
             Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
             trade = trader.evaluateTrade(offer);
-            //acceptTrade(trade);
+            // acceptTrade(trade);
         }
         return trade;
     }

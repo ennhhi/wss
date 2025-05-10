@@ -1,4 +1,3 @@
-
 // Implements methods to return tile information based
 // on the vision range defined in a vision type subclass
 
@@ -30,15 +29,32 @@ public abstract class Vision {
 
     private Path findClosest(String resource) {
         for (int[] off : offsets) {
-            Tile tile = map.getTile(map.getPlayerRow() + off[0], map.getPlayerCol() + off[1]);
+            int newRow = map.getPlayerRow() + off[0];
+            int newCol = map.getPlayerCol() + off[1];
+            Tile tile = map.getTile(newRow, newCol);
             if (tile != null && hasResource(tile, resource)) {
-                return new Path(java.util.List.of(Direction.EAST),
-                        tile.getTerrain().getMoveCost(),
-                        tile.getTerrain().getWaterCost(),
-                        tile.getTerrain().getFoodCost());
+                Direction dir = offsetToDirection(off[0], off[1]);
+                return new Path(
+                    java.util.List.of(dir),
+                    tile.getTerrain().getMoveCost(),
+                    tile.getTerrain().getWaterCost(),
+                    tile.getTerrain().getFoodCost()
+                );
             }
         }
         return null;
+    }
+
+    private Direction offsetToDirection(int rowOff, int colOff) {
+        if (rowOff == -1 && colOff == 0) return Direction.NORTH;
+        if (rowOff == 1 && colOff == 0) return Direction.SOUTH;
+        if (rowOff == 0 && colOff == 1) return Direction.EAST;
+        if (rowOff == 0 && colOff == -1) return Direction.WEST;
+        if (rowOff == -1 && colOff == 1) return Direction.NORTH_EAST;
+        if (rowOff == -1 && colOff == -1) return Direction.NORTH_WEST;
+        if (rowOff == 1 && colOff == 1) return Direction.SOUTH_EAST;
+        if (rowOff == 1 && colOff == -1) return Direction.SOUTH_WEST;
+        return Direction.EAST; // fallback
     }
 
     //returns item bonus on a tile, if any

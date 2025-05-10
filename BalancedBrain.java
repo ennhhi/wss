@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class BalancedBrain extends Brain {
 
     private Path rememberedWaterPath = null;
@@ -7,6 +5,42 @@ public class BalancedBrain extends Brain {
 
     public BalancedBrain(Player player, Vision vision, WSSMap map) {
         super(player, vision, map);
+    }
+
+    @Override
+    protected double getResourceThreshold() {
+        return 0.5; // tries to keep above 50% of max resources
+    }
+
+    @Override
+    protected int getMinStrengthToMove() {
+        // Return the cost needed to move onto next tile
+        Tile east = map.getRelativeTile(0, 1);
+        return (east != null) ? east.getTerrain().getMoveCost() : 1;
+    }
+
+    @Override
+    protected Path choosePath() {
+        boolean needsWater = player.getCurrent_water() < player.getMax_water() * getResourceThreshold();
+        boolean needsFood = player.getCurrent_food() < player.getMax_food() * getResourceThreshold();
+
+        if (needsWater && rememberedWaterPath != null) {
+            return rememberedWaterPath;
+        }
+        if (needsFood && rememberedFoodPath != null) {
+            return rememberedFoodPath;
+        }
+        // Default to moving east
+        Tile east = map.getRelativeTile(0, 1);
+        if (east != null) {
+            return new Path(
+                java.util.List.of(Direction.EAST),
+                east.getTerrain().getMoveCost(),
+                east.getTerrain().getWaterCost(),
+                east.getTerrain().getFoodCost()
+            );
+        }
+        return null;
     }
 
     @Override
@@ -23,24 +57,7 @@ public class BalancedBrain extends Brain {
         Path foodPath = vision.closestFood();
         if (foodPath != null) rememberedFoodPath = foodPath;
 
-        Path chosenPath = null;
-
-        boolean needsWater = player.getCurrent_water() < player.getMax_water() / 3;
-        boolean needsFood = player.getCurrent_food() < player.getMax_food() / 3;
-
-        if (needsWater && rememberedWaterPath != null) {
-            chosenPath = rememberedWaterPath;
-        } else if (needsFood && rememberedFoodPath != null) {
-            chosenPath = rememberedFoodPath;
-        } else {
-            Tile east = map.getRelativeTile(0, 1);
-            if (east != null) {
-                chosenPath = new Path(List.of(Direction.EAST),
-                    east.getTerrain().getMoveCost(),
-                    east.getTerrain().getWaterCost(),
-                    east.getTerrain().getFoodCost());
-            }
-        }
+        Path chosenPath = choosePath();
 
         if (chosenPath != null && chosenPath.getFirstStep() != null) {
             Direction step = chosenPath.getFirstStep();

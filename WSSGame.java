@@ -59,13 +59,14 @@ public class WSSGame {
             visionButtons.add(farSightButton);
             visionButtons.add(cautiousButton);
 
-            // TODO: Once more brain subtypes are added, add more corresponding buttons.
             ButtonGroup brainButtons = new ButtonGroup();
             JRadioButton balancedBrainButton = new JRadioButton("Balanced");
             JRadioButton cautiousBrainButton = new JRadioButton("Cautious");
+            JRadioButton recklessBrainButton = new JRadioButton("Reckless"); 
             balancedBrainButton.setSelected(true);
             brainButtons.add(balancedBrainButton);
             brainButtons.add(cautiousBrainButton);
+            brainButtons.add(recklessBrainButton);
 
             JSlider speedSlider = new JSlider(0, 3000, 2000);
             speedSlider.setMajorTickSpacing(500);
@@ -94,9 +95,8 @@ public class WSSGame {
             jfrm.add(createRow(new JLabel("Select Vision Type:")));
             jfrm.add(createRow(focusedButton, keenEyedButton, farSightButton, cautiousButton));
 
-            // TODO: Once more brain subtypes are added, add their buttons here.
             jfrm.add(createRow(new JLabel("Select Brain Type:")));
-            jfrm.add(createRow(balancedBrainButton, cautiousBrainButton));
+            jfrm.add(createRow(balancedBrainButton, cautiousBrainButton, recklessBrainButton)); 
 
             jfrm.add(createRow(new JLabel("Set Game Speed (in seconds per turn):")));
             jfrm.add(createRow(speedSlider));
@@ -138,11 +138,12 @@ public class WSSGame {
                 else
                     vision = new CautiousVision(player, map);
 
-                // TODO: Once more brain subtypes are added, add selection of brains.
                 if (balancedBrainButton.isSelected()) 
                     brain = new BalancedBrain(player, vision, map);
-                else 
+                else if (cautiousBrainButton.isSelected())
                     brain = new CautiousBrain(player, vision, map);
+                else
+                    brain = new RecklessBrain(player, vision, map);
 
                 turnSpeed = speedSlider.getValue();
 

@@ -9,6 +9,6 @@ public class BalancedPlayer extends Player{
     private int current_strength;
 
     BalancedPlayer(){
-        super(15, 15, 15, 0);
+        super(20, 20, 20, 0);
     }
 }
