@@ -141,7 +141,7 @@ public void checkValues(int food, int water, int strength) {
 
         //Reduce food and water by half of current tile's cost
         setCurrent_food(current_food-(currentTile.getTerrain().getFoodCost()/2));
-        setCurrent_food(current_water-(currentTile.getTerrain().getWaterCost()/2));
+        setCurrent_water(current_water-(currentTile.getTerrain().getWaterCost()/2));
 
     }
 
