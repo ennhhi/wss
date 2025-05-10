@@ -1,4 +1,7 @@
 
+// Implements methods to return tile information based
+// on the vision range defined in a vision type subclass
+
 public abstract class Vision {
     protected Player player;
     protected WSSMap map;

@@ -3,6 +3,8 @@ import java.awt.event.*;
 import java.util.Hashtable;
 import javax.swing.*;
 
+// main() -- handles main game loop and death + win condition checks
+
 public class WSSGame {
     private static Player player;
     private static Vision vision;

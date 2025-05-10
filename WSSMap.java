@@ -1,6 +1,7 @@
-import java.util.Random;
 
-//Can get player location, map dimensions, tiles, and move the player
+//Gets player location, map dimensions, tile information, and move the player
+
+import java.util.Random;
 
 public class WSSMap {
     public enum Difficulty { EASY, MEDIUM, HARD }

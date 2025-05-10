@@ -1,3 +1,6 @@
+
+// Encodes movement instructions for a given direction
+
 public enum Direction {
     NORTH(-1, 0),
     SOUTH(1, 0),

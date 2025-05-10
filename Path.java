@@ -1,3 +1,6 @@
+
+// Holds a list of moves
+
 import java.util.List;
 
 public class Path {
