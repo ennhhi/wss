@@ -1,10 +1,15 @@
 // Implements methods to return tile information based
 // on the vision range defined in a vision type subclass
 
+import java.util.List;
+
 public abstract class Vision {
     protected Player player;
     protected WSSMap map;
-    protected int[][] offsets;
+    protected int[][] offsets; //grid offsets for tiles the brain can evaluate, unique to each vision subclass
+    protected List<Direction> validNextMoves;
+    //player can only move 1 tile at a time
+    //validNextMoves are these directions
 
     public Vision(Player player, WSSMap map) {
         this.player = player;
@@ -25,6 +30,10 @@ public abstract class Vision {
 
     public  Path easiestPath() {
         return findLowestCost();
+    }
+
+    public List<Direction> getValidNextMoves() {
+        return this.validNextMoves;
     }
 
     private Path findClosest(String resource) {

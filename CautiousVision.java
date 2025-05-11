@@ -7,5 +7,9 @@ public class CautiousVision extends Vision {
             {-1, 0},    // NORTH
             {0, 1}      // EAST
         };
+        validNextMoves =  java.util.List.of(
+                Direction.EAST,
+                Direction.SOUTH,
+                Direction.NORTH);
     }
 }

@@ -65,10 +65,8 @@ public class BalancedBrain extends Brain {
             int moveCost = target.getTerrain().getMoveCost();
 
             if (player.getCurrent_strength() < moveCost) {
-                System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
-                player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
-                player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
-                player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
+                System.out.println("Not enough strength to move. Resting this turn (+3 strength).");
+                player.rest(map);
                 return;
             }
 
@@ -107,10 +105,8 @@ public class BalancedBrain extends Brain {
             }
 
         } else {
-            System.out.println("BalancedBrain: No valid move. Resting this turn (+2 strength).");
-            player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
-            player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
-            player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
+            System.out.println("BalancedBrain: No valid move. Resting this turn (+3 strength).");
+            player.rest(map);
         }
     }
 }

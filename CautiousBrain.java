@@ -53,9 +53,7 @@ public class CautiousBrain extends Brain{
         //maintain enough strength to move across any tile
         if (player.getCurrent_strength() < getMinStrengthToMove()) {
             System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
-            player.setCurrent_strength(Math.min(player.getMax_strength(), player.getCurrent_strength() + 2));
-            player.setCurrent_water(Math.max(0, player.getCurrent_water() - 1));
-            player.setCurrent_food(Math.max(0, player.getCurrent_food() - 1));
+            player.rest(map);
             return;
         }
 

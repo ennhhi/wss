@@ -52,7 +52,7 @@ public abstract class Brain {
     }
 
     private void restPlayer() {
-        System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
+        System.out.println("Not enough strength to move. Resting this turn (+3 strength).");
         player.rest(map);
     }
 
@@ -89,7 +89,7 @@ public abstract class Brain {
     }
 
     private void handleNoPath() {
-        System.out.println("No valid path. Resting (+2 strength).");
+        System.out.println("No valid path. Resting (+3 strength).");
         restPlayer();
     }
 
