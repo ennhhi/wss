@@ -95,4 +95,57 @@ public abstract class Brain {
 
     // Let each subclass decide how to pick a path
     protected abstract Path choosePath();
+
+
+    //Call function when there is a tile with a trader and is trading
+    public void makeTrade(Trader trader, int threshold){
+        int food_threshold = player.getMax_food()*threshold;
+        int water_threshold = player.getMax_water()*threshold;
+        int gold = player.getCurrent_gold();
+        Offer offer=new Offer();
+        //If brain is reckless (threshold = 0)
+        if(gold>0){
+            if(food_threshold==0 && water_threshold==0){
+                    if( (gold/2) > (player.getMax_food() - player.getCurrent_food()) ){
+                        offer.setWantFood(player.getMax_food()-player.getCurrent_food());
+                        offer.setOfferGold( offer.getWantFood() );
+                    } else {
+                        offer.setWantFood(gold/2);
+                        offer.setOfferGold(gold/2);
+                    }
+                    gold-= offer.getWantFood();
+                    if( (gold) > (player.getMax_water() - player.getCurrent_water()) ){
+                        offer.setWantWater(player.getMax_water()-player.getCurrent_water());
+                        offer.setOfferGold(offer.getOfferGold() + offer.getWantFood() );
+                    } else {
+                        offer.setWantWater(gold);
+                        offer.setOfferGold(offer.getOfferGold() + gold);
+                    }
+                    gold-= offer.getWantWater();
+            } else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold){
+                if( (gold/2) > food_threshold ){
+                    offer.setWantFood(player.getMax_food()-player.getCurrent_food());
+                    offer.setOfferGold( offer.getWantFood() );
+                } else {
+                    offer.setWantFood(gold/2);
+                    offer.setOfferGold(gold/2);
+                }
+                gold-= offer.getWantFood();
+                if( (gold) > water_threshold){
+                    offer.setWantWater(player.getMax_water()-player.getCurrent_water());
+                    offer.setOfferGold(offer.getOfferGold() + offer.getWantFood() );
+                } else {
+                    offer.setWantWater(gold);
+                    offer.setOfferGold(offer.getOfferGold() + gold);
+                }
+                gold-= offer.getWantWater();
+            } else if(player.getCurrent_food() < food_threshold){
+
+            } else if(player.getCurrent_water() < water_threshold) {
+
+            } else{
+
+            }
+        }
+    }
 }

@@ -116,16 +116,12 @@ public void checkValues(int food, int water, int strength) {
 }
 
     public Offer suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
-        Offer trade = null;
+        Offer offer = null;
         if(trader.isTrading()){
-            Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
-            trade = trader.evaluateTrade(offer);
-            // acceptTrade(trade);
+            offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
         }
-        return trade;
+        return offer;
     }
-
-
 
     public void acceptTrade(Offer trade){
             if(trade != null){
