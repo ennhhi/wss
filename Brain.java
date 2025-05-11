@@ -103,8 +103,8 @@ public abstract class Brain {
         int water_threshold = player.getMax_water()*threshold;
         int gold = player.getCurrent_gold();
         Offer offer=new Offer();
-        //If brain is reckless (threshold = 0)
-        if(gold>0){
+        if(gold>0 && trader.isTrading()){
+            //If brain is reckless (threshold = 0)
             if(food_threshold==0 && water_threshold==0){
                     if( (gold/2) > (player.getMax_food() - player.getCurrent_food()) ){
                         offer.setWantFood(player.getMax_food()-player.getCurrent_food());

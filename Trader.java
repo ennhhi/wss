@@ -6,6 +6,7 @@ public abstract class Trader {
     private int water;
     private int gold;
     private boolean isTrading;
+    private String type;
     private final Random random = new Random();
 
     public Trader(){
@@ -14,17 +15,19 @@ public abstract class Trader {
         this.water = 0;
         this.gold = 0;
         isTrading = true;
+        type="";
     }
     
-    public Trader(int patienceLevel, int food, int water, int gold){
+    public Trader(int patienceLevel, int food, int water, int gold, String type){
         this.patienceLevel = patienceLevel;
         this.food = food;
         this.water = water;
         this.gold = gold;
         isTrading = true;
+        this.type = type;
     }
 
-    public Offer evaluateTrade(Offer offer, String type){
+    public Offer evaluateTrade(Offer offer){
         int weight=0;
         boolean successful=false;
         Offer trade = null;
@@ -39,7 +42,7 @@ public abstract class Trader {
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
             
-            successful = roll(weight, type);
+            successful = roll(weight);
 
             if(successful){
                 trade=new Offer();
@@ -65,7 +68,7 @@ public abstract class Trader {
         return trade;
     }
 
-    private boolean roll( int weight, String type){
+    private boolean roll( int weight){
         int roll = random.nextInt(100);
         boolean successful = false;
         int firstLower = -1;
@@ -94,11 +97,6 @@ public abstract class Trader {
                 secondUpper = 6;
                 ThirdUpper = 6;
                 break;
-            /* 
-            case "Impatient": 
-                patienceMinus=2;
-                break;
-            */
             default: break;
         }  
 
