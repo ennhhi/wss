@@ -21,26 +21,36 @@ public class BalancedBrain extends Brain {
 
     @Override
     protected Path choosePath() {
-        boolean needsWater = player.getCurrent_water() < player.getMax_water() * getResourceThreshold();
-        boolean needsFood = player.getCurrent_food() < player.getMax_food() * getResourceThreshold();
+        boolean needsWater = player.getCurrent_water() < (player.getMax_water() * getResourceThreshold());
+        boolean needsFood = player.getCurrent_food() < (player.getMax_food() * getResourceThreshold());
 
-        if (needsWater && rememberedWaterPath != null) {
+        // Use remembered water/food paths if still valid/in-bounds:
+        if (needsWater && rememberedWaterPath != null && isValidPath(rememberedWaterPath)) {
             return rememberedWaterPath;
         }
-        if (needsFood && rememberedFoodPath != null) {
+        if (needsFood && rememberedFoodPath != null && isValidPath(rememberedFoodPath)) {
             return rememberedFoodPath;
         }
-        // Default to moving east
-        Tile east = map.getRelativeTile(0, 1);
-        if (east != null) {
+
+        // Default to moving east, but only if in-bounds:
+        Tile eastTile = map.getRelativeTile(0, 1);
+        if (eastTile != null) {
             return new Path(
                 java.util.List.of(Direction.EAST),
-                east.getTerrain().getMoveCost(),
-                east.getTerrain().getWaterCost(),
-                east.getTerrain().getFoodCost()
+                eastTile.getTerrain().getMoveCost(),
+                eastTile.getTerrain().getWaterCost(),
+                eastTile.getTerrain().getFoodCost()
             );
         }
-        return null;
+
+        return null; // No valid move found
+    }
+
+    // Simple helper to ensure the path's first step is in-bounds
+    private boolean isValidPath(Path p) {
+        Direction step = p.getFirstStep();
+        Tile target = map.getTileInDirection(step);
+        return (target != null);
     }
 
     @Override

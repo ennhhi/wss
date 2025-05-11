@@ -24,22 +24,33 @@ public class CautiousBrain extends Brain{
         boolean needsFood = player.getCurrent_food() < player.getMax_food() * getResourceThreshold();
 
         if (needsWater && rememberedWaterPath != null) {
-            return rememberedWaterPath;
+            if (isValidPath(rememberedWaterPath)) {
+                return rememberedWaterPath;
+            }
         }
         if (needsFood && rememberedFoodPath != null) {
-            return rememberedFoodPath;
+            if (isValidPath(rememberedFoodPath)) {
+                return rememberedFoodPath;
+            }
         }
         // Default to moving east
         Tile east = map.getRelativeTile(0, 1);
-        if (east != null) {
-            return new Path(
-                java.util.List.of(Direction.EAST),
-                east.getTerrain().getMoveCost(),
-                east.getTerrain().getWaterCost(),
-                east.getTerrain().getFoodCost()
-            );
+        if (east == null) {
+            return null; // out-of-bounds, no move
         }
-        return null;
+        return new Path(
+            java.util.List.of(Direction.EAST),
+            east.getTerrain().getMoveCost(),
+            east.getTerrain().getWaterCost(),
+            east.getTerrain().getFoodCost()
+        );
+    }
+
+    // A small helper to ensure we don't reference out-of-bounds targets
+    private boolean isValidPath(Path p) {
+        if (p == null || p.getFirstStep() == null) return false;
+        Tile target = map.getTileInDirection(p.getFirstStep());
+        return (target != null);
     }
 
     @Override
