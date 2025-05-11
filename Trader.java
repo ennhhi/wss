@@ -6,7 +6,6 @@ public abstract class Trader {
     private int water;
     private int gold;
     private boolean isTrading;
-    private int change;
     private final Random random = new Random();
 
     public Trader(){
@@ -14,23 +13,25 @@ public abstract class Trader {
         this.food = 0;
         this.water = 0;
         this.gold = 0;
-        this.change = 1;
         isTrading = true;
     }
     
-    public Trader(int patienceLevel, int food, int water, int gold, int change){
+    public Trader(int patienceLevel, int food, int water, int gold){
         this.patienceLevel = patienceLevel;
         this.food = food;
         this.water = water;
         this.gold = gold;
-        this.change = change;
         isTrading = true;
     }
 
-    public Offer evaluateTrade(Offer offer){
+    public Offer evaluateTrade(Offer offer, String type){
         int weight=0;
         boolean successful=false;
-        Offer trade= null;
+        Offer trade = null;
+        if(offer==null){
+            return null;
+        }
+
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
 
@@ -38,7 +39,7 @@ public abstract class Trader {
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
             
-            successful = roll(weight, "default");
+            successful = roll(weight, type);
 
             if(successful){
                 trade=new Offer();
@@ -48,17 +49,16 @@ public abstract class Trader {
             } else {
                 trade = new Offer();
                 while(weight<=3){
-                    trade.setOfferFood(offer.getWantFood()-offer.getOfferFood()-change);
-                    trade.setOfferWater(offer.getWantWater()-offer.getOfferWater()-change);
-                    trade.setOfferGold(offer.getWantGold()-offer.getOfferGold()-change);
-                    weight+=3*change;
+                    trade.setOfferFood(offer.getWantFood()-offer.getOfferFood()-1);
+                    trade.setOfferWater(offer.getWantWater()-offer.getOfferWater()-1);
+                    trade.setOfferGold(offer.getWantGold()-offer.getOfferGold()-1);
+                    weight+=3;
                 }
+                patienceLevel-=1;
             }
-            
         } else {
-            patienceLevel-=2;
-        }        
-
+            patienceLevel-=1;
+        }
         if(patienceLevel<=0 ){
             quitNegotiation();
         }
@@ -94,9 +94,11 @@ public abstract class Trader {
                 secondUpper = 6;
                 ThirdUpper = 6;
                 break;
+            /* 
             case "Impatient": 
                 patienceMinus=2;
                 break;
+            */
             default: break;
         }  
 
