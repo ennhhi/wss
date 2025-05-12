@@ -133,7 +133,7 @@ public void checkValues(int food, int water, int strength) {
     }
 */
     public void rest(WSSMap map){
-        setCurrent_strength(current_strength + 3);
+        setCurrent_strength(current_strength + 2);
         Tile currentTile = map.getTile(map.getPlayerRow(), map.getPlayerRow());
 
         //Reduce food and water by half of current tile's cost

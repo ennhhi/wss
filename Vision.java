@@ -58,11 +58,8 @@ public abstract class Vision {
         if (rowOff == -1 && colOff == 0) return Direction.NORTH;
         if (rowOff == 1 && colOff == 0) return Direction.SOUTH;
         if (rowOff == 0 && colOff == 1) return Direction.EAST;
-        if (rowOff == 0 && colOff == -1) return Direction.WEST;
         if (rowOff == -1 && colOff == 1) return Direction.NORTH_EAST;
-        if (rowOff == -1 && colOff == -1) return Direction.NORTH_WEST;
         if (rowOff == 1 && colOff == 1) return Direction.SOUTH_EAST;
-        if (rowOff == 1 && colOff == -1) return Direction.SOUTH_WEST;
         return Direction.EAST; // fallback
     }
 
