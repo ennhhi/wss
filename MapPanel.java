@@ -14,24 +14,10 @@ public class MapPanel extends JPanel {
         setupTilePanels();
     }
 
-    // @Override
-    // protected void paintComponent(Graphics g) {
-    //     super.paintComponent(g);
-    //     for (int r = 0; r < map.getHeight(); r++) {
-    //         for (int c = 0; c < map.getWidth(); c++) {
-    //             Tile tile = map.getTile(r, c);
-    //             g.setColor(tile.getTerrain().getColor());
-    //             g.fillRect(c * CELL_SIZE, (map.getHeight() - r - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-    //             g.setColor(Color.BLACK);
-    //             g.drawRect(c * CELL_SIZE, (map.getHeight() - r - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-    //         }
-    //     }
-    // }
-
     private void setupTilePanels() {
         for (int r = map.getHeight() - 1; r >= 0; r--) {
             for (int c = 0; c < map.getWidth(); c++) {
-                tilePanels[r][c] = new JPanel();
+                tilePanels[r][c] = new JPanel(new FlowLayout());
                 tilePanels[r][c].setBackground(map.getTile(r, c).getTerrain().getColor());
                 tilePanels[r][c].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
@@ -41,7 +27,10 @@ public class MapPanel extends JPanel {
         redrawTiles();
     }
 
-    private void redrawTiles() {
+    public void redrawTiles() {
+        int playerX = map.getPlayerCol();
+        int playerY = map.getPlayerRow();
+
         for (int r = map.getHeight() - 1; r >= 0; r--) {
             for (int c = 0; c < map.getWidth(); c++) {
                 Tile tile = map.getTile(r, c);
@@ -49,7 +38,6 @@ public class MapPanel extends JPanel {
 
                 TerrainType terrain = tile.getTerrain();
                 int tileFood = tile.getFood(), tileWater = tile.getWater(), tileGold = tile.getGold();
-                // tilePanels[r][c].setBackground(tile.getTerrain().getColor());
 
                 // Tooltip
                 String terrainString = terrain.name();
@@ -62,14 +50,20 @@ public class MapPanel extends JPanel {
                     ((tile.getRepeatableFood() && tileFood > 0) ? "Repeating Food Bonus!<br>" : "") +
                     ((tile.getRepeatableWater() && tileWater > 0) ? "Repeating Water Bonus!<br>" : "") +
                     ((tile.getRepeatableGold() && tileGold > 0) ? "Repeating Gold Bonus!<br>" : "") +
-                    ((tile.hasTrader()) ? "Trader<br>" : "Food: %d, Water: %d, Gold: %d</html>"), 
+                    ((tile.hasTrader()) ? "Trader<br>" : "FoodBonus: %d, WaterBonus: %d, GoldBonus: %d</html>"), 
                 terrainString, terrain.getMoveCost(), terrain.getFoodCost(), terrain.getWaterCost(),
                 tileFood, tileWater, tileGold);
 
                 tilePanels[r][c].setToolTipText(tooltip);
 
-                // Item Display
-                if (tile.hasTrader()) {
+                // Player/Item Display
+                if (r == playerY && c == playerX) {
+                    JPanel playerPanel = new JPanel();
+                    playerPanel.setBackground(Color.RED);
+                    playerPanel.setPreferredSize(new Dimension(10, 10));
+                    tilePanels[r][c].add(playerPanel);
+                }
+                else if (tile.hasTrader()) {
                     tilePanels[r][c].add(new JLabel("T"));
                 }
                 else if (tileFood > 0 || tileWater > 0 || tileGold > 0) {
@@ -92,9 +86,12 @@ public class MapPanel extends JPanel {
                             itemLabel += "*";
                         }
                     }
-    
+
                     tilePanels[r][c].add(new JLabel(itemLabel));
                 }
+
+                tilePanels[r][c].revalidate();
+                tilePanels[r][c].repaint();
             }
         }
     }

@@ -1,3 +1,6 @@
+
+//Gets player location, map dimensions, tile information, and move the player
+
 import java.util.Random;
 
 public class WSSMap {
@@ -7,13 +10,17 @@ public class WSSMap {
     private final int height;
     private final Tile[][] grid;
     private final Random random = new Random();
-    Difficulty difficulty;
+    private int playerRow;
+    private int playerCol;
+    private final Difficulty difficulty;
 
     public WSSMap(int width, int height, Difficulty difficulty) {
         this.width = width;
         this.height = height;
-        grid = new Tile[height][width];
+        this.playerRow = height / 2; // roughly centers player on y-axis
+        this.playerCol = 0;          // always starts at first column
         this.difficulty = difficulty;
+        grid = new Tile[height][width];
         generateMap(difficulty);
     }
 
@@ -52,27 +59,14 @@ public class WSSMap {
         }
     }
 
-    public Tile getTile(int row, int col) {
-        if (row < 0 || row >= height || col < 0 || col >= width) return null;
-        return grid[row][col];
-    }
-
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-    public Difficulty getDifficulty(){ return difficulty; }
-
-
-
     private void generateItems(Tile tile, Difficulty difficulty) {
         if (random.nextInt(100) < 1) {
-            //tile.setTrader(new Trader()); //Cannot create a trader, replace with trader subclass once finished
+            // tile.setTrader(new Trader()); // Placeholder for Trader feature
             return;
         }
 
         int foodBonus = 0, waterBonus = 0, goldBonus = 0;
-        boolean repeatableFood = false;
-        boolean repeatableWater = false;
-        boolean repeatableGold = false;
+        boolean repeatableFood = false, repeatableWater = false, repeatableGold = false;
         int itemRate;
 
         switch (difficulty) {
@@ -82,25 +76,69 @@ public class WSSMap {
             default -> itemRate = 0;
         }
 
-        if (random.nextInt(100) < itemRate)
-            foodBonus = random.nextInt(3) + 3;
-        if (random.nextInt(100) < itemRate)
-            waterBonus = random.nextInt(3) + 3;
-        if (random.nextInt(100) < itemRate)
-            goldBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate) foodBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate) waterBonus = random.nextInt(3) + 3;
+        if (random.nextInt(100) < itemRate) goldBonus = random.nextInt(3) + 3;
 
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
-            repeatableFood = true;
-        }
-        
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
-            repeatableWater = true;
-        }
-        
-        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0 ) && random.nextInt(100) < 20){
-            repeatableGold = true;
-        }
-        
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0) && random.nextInt(100) < 20) repeatableFood = true;
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0) && random.nextInt(100) < 20) repeatableWater = true;
+        if ((foodBonus != 0 || waterBonus != 0 || goldBonus != 0) && random.nextInt(100) < 20) repeatableGold = true;
+
         tile.setBonuses(foodBonus, waterBonus, goldBonus, repeatableFood, repeatableWater, repeatableGold);
+    }
+
+    // Returns a tile object at the given coordinates
+    public Tile getTile(int row, int col) {
+        // Bounds check
+        if (row < 0 || row >= height || col < 0 || col >= width) return null;
+        return grid[row][col];
+    }
+
+    // Returns the tile object relative to the player position by offset
+    public Tile getRelativeTile(int dRow, int dCol) {
+        int newRow = playerRow + dRow;
+        int newCol = playerCol + dCol;
+        // Bounds check
+        if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
+            return grid[newRow][newCol];
+        }
+        return null;
+    }
+
+    // Returns 1 adjacent tile in a given direction
+    public Tile getTileInDirection(Direction dir) {
+        return getRelativeTile(dir.deltaRow(), dir.deltaCol());
+    }
+
+    // Updates player position
+    public void movePlayer(Direction dir) {
+        int newRow = playerRow + dir.deltaRow();
+        int newCol = playerCol + dir.deltaCol();
+        if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
+            playerRow = newRow;
+            playerCol = newCol;
+        } else {
+            System.out.println("Error: Player attempted to move out of bounds.");
+        }
+    }
+
+    public int getPlayerRow() {
+        return playerRow;
+    }
+
+    public int getPlayerCol() {
+        return playerCol;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 }

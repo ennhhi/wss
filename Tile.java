@@ -1,3 +1,8 @@
+
+// Object that contains data of each tile
+// Initialises tile state on game start
+// Can fetch resource and item costs of a tile
+
 public class Tile {
     private TerrainType terrain;
     private int food, water, gold;

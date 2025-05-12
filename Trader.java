@@ -6,6 +6,7 @@ public abstract class Trader {
     private int water;
     private int gold;
     private boolean isTrading;
+    private String type;
     private final Random random = new Random();
 
     public Trader(){
@@ -14,20 +15,26 @@ public abstract class Trader {
         this.water = 0;
         this.gold = 0;
         isTrading = true;
+        type="";
     }
     
-    public Trader(int patienceLevel, int food, int water, int gold){
+    public Trader(int patienceLevel, int food, int water, int gold, String type){
         this.patienceLevel = patienceLevel;
         this.food = food;
         this.water = water;
         this.gold = gold;
         isTrading = true;
+        this.type = type;
     }
 
     public Offer evaluateTrade(Offer offer){
         int weight=0;
         boolean successful=false;
-        Offer trade= null;
+        Offer trade = null;
+        if(offer==null){
+            return null;
+        }
+
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
 
@@ -50,12 +57,11 @@ public abstract class Trader {
                     trade.setOfferGold(offer.getWantGold()-offer.getOfferGold()-1);
                     weight+=3;
                 }
+                patienceLevel-=1;
             }
-            
         } else {
-            patienceLevel-=2;
-        }        
-
+            patienceLevel-=1;
+        }
         if(patienceLevel<=0 ){
             quitNegotiation();
         }
@@ -65,25 +71,54 @@ public abstract class Trader {
     private boolean roll( int weight){
         int roll = random.nextInt(100);
         boolean successful = false;
-        if(-1 <= weight && weight < 2){
-            if(roll>=40){
+        int firstLower = -1;
+        int firstUpper = 2;
+        int secondLower = 2;
+        int secondUpper = 4;
+        int ThirdUpper = 4;
+        int firstRoll= 40;
+        int secondRoll= 10;
+        int patienceMinus = 1;
+
+        switch(type){
+            case "Cheap": 
+                firstLower = 0;
+                firstUpper = 3;
+                secondLower = 3;
+                secondUpper = 5;
+                ThirdUpper = 5;
+                firstRoll= 60;
+                secondRoll= 40;
+                break;
+            case "Expensive": 
+                firstLower = 1;
+                firstUpper = 4;
+                secondLower = 4;
+                secondUpper = 6;
+                ThirdUpper = 6;
+                break;
+            default: break;
+        }  
+
+        if(firstLower <= weight && weight < firstUpper){
+            if(roll>=firstRoll){
                 successful=true;
             } else {
-                patienceLevel--;
+                patienceLevel-=patienceMinus;
             }
-        } else if(2 <= weight && weight < 4){
-            if(roll>=10){
+        } else if(secondLower <= weight && weight < secondUpper){
+            if(roll>=secondRoll){
                 successful=true;
             }
-        } else if(weight >= 4){
+        } else if(weight >= ThirdUpper){
             successful=true;
         } else {
-            patienceLevel--;
+            patienceLevel-=patienceMinus;
         }
         return successful;
     }
 
-    public void counter_offer(){
+    public void counterOffer(){
         
     }
     

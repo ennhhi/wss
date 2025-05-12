@@ -103,27 +103,24 @@ public abstract class Player {
         checkValues(current_food, current_water, current_strength);
     }
 
-    public void checkValues(int food, int water, int strength){
-        if(food > max_food){
-            food = max_food;
-        }
-        if(water > max_water){
-            water = max_water;
-        }
-        if(strength > max_strength){
-            strength = max_strength;
-        }
-        
-    }
+public void checkValues(int food, int water, int strength) {
+    if (food > max_food) food = max_food;
+    if (water > max_water) water = max_water;
+    if (strength > max_strength) strength = max_strength;
+    if (food < 0) food = 0;
+    if (water < 0) water = 0;
 
+    setCurrent_food(food);
+    setCurrent_water(water);
+    setCurrent_strength(strength);
+}
+/* 
     public Offer suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
-        Offer trade = null;
+        Offer offer = null;
         if(trader.isTrading()){
-            Offer offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
-            trade = trader.evaluateTrade(offer);
-            //acceptTrade(trade);
+            offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
         }
-        return trade;
+        return offer;
     }
 
     public void acceptTrade(Offer trade){
@@ -134,10 +131,15 @@ public abstract class Player {
                 checkValues(getCurrent_food(), getCurrent_water(), getCurrent_gold());
             }
     }
-
-    public void rest(){
+*/
+    public void rest(WSSMap map){
         setCurrent_strength(current_strength + 3);
-        checkValues(current_food, current_water, current_strength);
+        Tile currentTile = map.getTile(map.getPlayerRow(), map.getPlayerRow());
+
+        //Reduce food and water by half of current tile's cost
+        setCurrent_food(current_food-(currentTile.getTerrain().getFoodCost()/2));
+        setCurrent_water(current_water-(currentTile.getTerrain().getWaterCost()/2));
+
     }
 
     public void move(){

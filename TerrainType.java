@@ -1,3 +1,7 @@
+
+// Defines resource costs of terrain
+// Can return resource costs to move on a given terrain type
+
 import java.awt.*;
 
 public enum TerrainType {

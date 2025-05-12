@@ -1,4 +1,4 @@
-//Player with high resouces and low strength
+//Player with high resources and low strength
 public class PreparedPlayer extends Player {
     private int max_food;
     private int max_water;
@@ -8,11 +8,9 @@ public class PreparedPlayer extends Player {
     private int current_water;
     private int current_strength;
 
-    PreparedPlayer(){
-        super();
-    }
 
-    PreparedPlayer(int food, int water, int strength){
-        super(30, 30, 15,0);
-    }
+        public PreparedPlayer() {
+            super(30, 30, 15, 0);  // food, water, strength, gold
+        }
+    
 }

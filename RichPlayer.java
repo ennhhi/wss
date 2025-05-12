@@ -1,3 +1,4 @@
+// player with low resources and a lot of gold
 public class RichPlayer extends Player{
     private int max_food;
     private int max_water;
