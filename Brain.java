@@ -124,7 +124,7 @@ public abstract class Brain {
                     gold-= offer.getWantWater();
             } else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold){
                 if( (gold/2) > food_threshold ){
-                    offer.setWantFood(player.getMax_food()-player.getCurrent_food());
+                    offer.setWantFood(food_threshold-player.getCurrent_food());
                     offer.setOfferGold( offer.getWantFood() );
                 } else {
                     offer.setWantFood(gold/2);
@@ -132,7 +132,7 @@ public abstract class Brain {
                 }
                 gold-= offer.getWantFood();
                 if( (gold) > water_threshold){
-                    offer.setWantWater(player.getMax_water()-player.getCurrent_water());
+                    offer.setWantWater(water_threshold-player.getCurrent_water());
                     offer.setOfferGold(offer.getOfferGold() + offer.getWantFood() );
                 } else {
                     offer.setWantWater(gold);
@@ -140,11 +140,38 @@ public abstract class Brain {
                 }
                 gold-= offer.getWantWater();
             } else if(player.getCurrent_food() < food_threshold){
-
+                if( (gold) > (food_threshold-player.getCurrent_food()) ){
+                    offer.setWantFood(food_threshold-player.getCurrent_food());
+                    offer.setOfferGold( offer.getWantFood() );
+                } else {
+                    offer.setWantFood(gold+(player.getCurrent_water()-water_threshold));
+                    offer.setOfferGold(gold);
+                    offer.setOfferWater(player.getCurrent_water()-water_threshold);
+                }
             } else if(player.getCurrent_water() < water_threshold) {
-
+                if( (gold) > (water_threshold-player.getCurrent_water()) ){
+                    offer.setWantWater(water_threshold-player.getCurrent_water());
+                    offer.setOfferGold( offer.getWantWater() );
+                } else {
+                    offer.setWantWater(gold+(player.getCurrent_food()-food_threshold));
+                    offer.setOfferGold(gold);
+                    offer.setOfferFood(player.getCurrent_food()-food_threshold);
+                }
             } else{
-
+                offer=null;
+            }
+        }
+        if(offer != null){
+            Offer trade = trader.evaluateTrade(offer);
+            if(trade == null){
+                System.out.println("Trader rejected trade");
+            } else {
+                int add_Food = player.getCurrent_food() + offer.getWantFood() - offer.getOfferFood();
+                int add_Water = player.getCurrent_water() + offer.getWantWater() - offer.getOfferWater();
+                player.setCurrent_food(add_Food);
+                player.setCurrent_water(add_Water);
+                player.setCurrent_gold(player.getCurrent_gold()-offer.getOfferGold());
+                player.checkValues(player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_strength());
             }
         }
     }
