@@ -85,6 +85,7 @@ public abstract class Brain {
 
         if (target.hasTrader()) {
             System.out.println("There is a trader here...");
+            makeTrade(target.getTrader(), 0.0);
         }
     }
 
@@ -98,9 +99,9 @@ public abstract class Brain {
 
 
     //Call function when there is a tile with a trader and is trading
-    public void makeTrade(Trader trader, int threshold){
-        int food_threshold = player.getMax_food()*threshold;
-        int water_threshold = player.getMax_water()*threshold;
+    public void makeTrade(Trader trader, double threshold){
+        double food_threshold = player.getMax_food()*threshold;
+        double water_threshold = player.getMax_water()*threshold;
         int gold = player.getCurrent_gold();
         Offer offer=new Offer();
         if(gold>0 && trader.isTrading()){
@@ -124,7 +125,7 @@ public abstract class Brain {
                     gold-= offer.getWantWater();
             } else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold){
                 if( (gold/2) > food_threshold ){
-                    offer.setWantFood(food_threshold-player.getCurrent_food());
+                    offer.setWantFood((int)(food_threshold-player.getCurrent_food()));
                     offer.setOfferGold( offer.getWantFood() );
                 } else {
                     offer.setWantFood(gold/2);
@@ -132,7 +133,7 @@ public abstract class Brain {
                 }
                 gold-= offer.getWantFood();
                 if( (gold) > water_threshold){
-                    offer.setWantWater(water_threshold-player.getCurrent_water());
+                    offer.setWantWater((int)(water_threshold-player.getCurrent_water()));
                     offer.setOfferGold(offer.getOfferGold() + offer.getWantFood() );
                 } else {
                     offer.setWantWater(gold);
@@ -141,21 +142,21 @@ public abstract class Brain {
                 gold-= offer.getWantWater();
             } else if(player.getCurrent_food() < food_threshold){
                 if( (gold) > (food_threshold-player.getCurrent_food()) ){
-                    offer.setWantFood(food_threshold-player.getCurrent_food());
+                    offer.setWantFood((int)(food_threshold-player.getCurrent_food()));
                     offer.setOfferGold( offer.getWantFood() );
                 } else {
-                    offer.setWantFood(gold+(player.getCurrent_water()-water_threshold));
+                    offer.setWantFood((int)(gold+(player.getCurrent_water()-water_threshold)));
                     offer.setOfferGold(gold);
-                    offer.setOfferWater(player.getCurrent_water()-water_threshold);
+                    offer.setOfferWater((int)(player.getCurrent_water()-water_threshold));
                 }
             } else if(player.getCurrent_water() < water_threshold) {
                 if( (gold) > (water_threshold-player.getCurrent_water()) ){
-                    offer.setWantWater(water_threshold-player.getCurrent_water());
+                    offer.setWantWater((int)(water_threshold-player.getCurrent_water()));
                     offer.setOfferGold( offer.getWantWater() );
                 } else {
-                    offer.setWantWater(gold+(player.getCurrent_food()-food_threshold));
+                    offer.setWantWater((int)(gold+(player.getCurrent_food()-food_threshold)));
                     offer.setOfferGold(gold);
-                    offer.setOfferFood(player.getCurrent_food()-food_threshold);
+                    offer.setOfferFood((int)(player.getCurrent_food()-food_threshold));
                 }
             } else{
                 offer=null;

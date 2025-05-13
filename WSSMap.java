@@ -60,8 +60,12 @@ public class WSSMap {
     }
 
     private void generateItems(Tile tile, Difficulty difficulty) {
-        if (random.nextInt(100) < 1) {
-            // tile.setTrader(new Trader()); // Placeholder for Trader feature
+        if (random.nextInt(101) < 20) {
+            if(random.nextInt(101) < 50){
+                tile.setTrader(new CheapTrader());
+            } else {
+                tile.setTrader(new ExpensiveTrader());
+            }
             return;
         }
 
