@@ -38,6 +38,7 @@ public abstract class Trader {
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
 
+            //weight is the net gain for the trader between what the player is offering and what the player wants
             weight+= offer.getOfferFood()-offer.getWantFood();
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
@@ -69,7 +70,7 @@ public abstract class Trader {
     }
 
     private boolean roll( int weight){
-        int roll = random.nextInt(100);
+        int roll = random.nextInt(101);
         boolean successful = false;                
             int firstLower = 0;
             int firstUpper = 3;
@@ -103,19 +104,23 @@ public abstract class Trader {
             default: break;
         }  
 
+        //if the net gain is between the firstLower and firstUpper then roll a random int and compare to firstRoll
         if(firstLower <= weight && weight < firstUpper){
             if(roll>=firstRoll){
                 successful=true;
             } else {
                 patienceLevel-=patienceMinus;
             }
+        //else if the net gain is between the secondLower and secondUpper then roll a random int and compare to secondRoll
         } else if(secondLower <= weight && weight < secondUpper){
             if(roll>=secondRoll){
                 successful=true;
             }
+        //if the net gain is above the thirdUpper unconditionally accept
         } else if(weight >= ThirdUpper){
             successful=true;
         } else {
+            //if the net gain is too low, minus patience
             patienceLevel-=patienceMinus;
         }
         return successful;

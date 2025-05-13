@@ -100,6 +100,7 @@ public abstract class Brain {
 
     //Call function when there is a tile with a trader and is trading
     public void makeTrade(Trader trader, double threshold){
+        //The values we don't want to exceed
         double food_threshold = player.getMax_food()*threshold;
         double water_threshold = player.getMax_water()*threshold;
         int gold = player.getCurrent_gold();
@@ -123,6 +124,7 @@ public abstract class Brain {
                         offer.setOfferGold(offer.getOfferGold() + gold);
                     }
                     gold-= offer.getWantWater();
+            //If we need food and water
             } else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold){
                 if( (gold/2) > food_threshold ){
                     offer.setWantFood((int)(food_threshold-player.getCurrent_food()));
@@ -140,6 +142,7 @@ public abstract class Brain {
                     offer.setOfferGold(offer.getOfferGold() + gold);
                 }
                 gold-= offer.getWantWater();
+            //If we need food 
             } else if(player.getCurrent_food() < food_threshold){
                 if( (gold) > (food_threshold-player.getCurrent_food()) ){
                     offer.setWantFood((int)(food_threshold-player.getCurrent_food()));
@@ -149,6 +152,7 @@ public abstract class Brain {
                     offer.setOfferGold(gold);
                     offer.setOfferWater((int)(player.getCurrent_water()-water_threshold));
                 }
+            //If we need water
             } else if(player.getCurrent_water() < water_threshold) {
                 if( (gold) > (water_threshold-player.getCurrent_water()) ){
                     offer.setWantWater((int)(water_threshold-player.getCurrent_water()));
@@ -159,9 +163,11 @@ public abstract class Brain {
                     offer.setOfferFood((int)(player.getCurrent_food()-food_threshold));
                 }
             } else{
+                //We don't need any resources
                 offer=null;
             }
         }
+        //If offer != we needed resouces and made a trade
         if(offer != null){
             Offer trade = trader.evaluateTrade(offer);
             if(trade == null){
