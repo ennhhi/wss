@@ -111,6 +111,7 @@ public class BalancedBrain extends Brain {
                     System.out.println("There is a trader. I have enough supplies, so I skip the trader.");
                 } else {
                     System.out.println("There is a trader. Might consider trading here...");
+                    super.makeTrade(target.getTrader(), 0.5);
                 }
             }
 

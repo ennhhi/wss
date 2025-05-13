@@ -38,6 +38,7 @@ public abstract class Trader {
         if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
         && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
 
+            //weight is the net gain for the trader between what the player is offering and what the player wants
             weight+= offer.getOfferFood()-offer.getWantFood();
             weight+= offer.getOfferWater()-offer.getWantWater();
             weight+= offer.getOfferGold()-offer.getWantGold();
@@ -69,26 +70,28 @@ public abstract class Trader {
     }
 
     private boolean roll( int weight){
-        int roll = random.nextInt(100);
-        boolean successful = false;
-        int firstLower = -1;
-        int firstUpper = 2;
-        int secondLower = 2;
-        int secondUpper = 4;
-        int ThirdUpper = 4;
-        int firstRoll= 40;
-        int secondRoll= 10;
-        int patienceMinus = 1;
+        int roll = random.nextInt(101);
+        boolean successful = false;                
+            int firstLower = 0;
+            int firstUpper = 3;
+            int secondLower = 3;
+            int secondUpper = 5;
+            int ThirdUpper = 5;
+            int firstRoll= 60;
+            int secondRoll= 40;
+            int patienceMinus = 1;
+            
 
         switch(type){
             case "Cheap": 
-                firstLower = 0;
-                firstUpper = 3;
-                secondLower = 3;
-                secondUpper = 5;
-                ThirdUpper = 5;
-                firstRoll= 60;
-                secondRoll= 40;
+             firstLower = -1;
+             firstUpper = 2;
+             secondLower = 2;
+             secondUpper = 4;
+             ThirdUpper = 4;
+             firstRoll= 40;
+             secondRoll= 10;
+             patienceMinus = 3;
                 break;
             case "Expensive": 
                 firstLower = 1;
@@ -96,23 +99,28 @@ public abstract class Trader {
                 secondLower = 4;
                 secondUpper = 6;
                 ThirdUpper = 6;
+                patienceMinus = 2;
                 break;
             default: break;
         }  
 
+        //if the net gain is between the firstLower and firstUpper then roll a random int and compare to firstRoll
         if(firstLower <= weight && weight < firstUpper){
             if(roll>=firstRoll){
                 successful=true;
             } else {
                 patienceLevel-=patienceMinus;
             }
+        //else if the net gain is between the secondLower and secondUpper then roll a random int and compare to secondRoll
         } else if(secondLower <= weight && weight < secondUpper){
             if(roll>=secondRoll){
                 successful=true;
             }
+        //if the net gain is above the thirdUpper unconditionally accept
         } else if(weight >= ThirdUpper){
             successful=true;
         } else {
+            //if the net gain is too low, minus patience
             patienceLevel-=patienceMinus;
         }
         return successful;

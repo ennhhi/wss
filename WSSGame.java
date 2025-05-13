@@ -128,6 +128,7 @@ public class WSSGame {
 
                 map = new WSSMap(width, height, diff);
                 mapPanel = new MapPanel(map);
+                mapPanel.redrawTiles(); // render map once
 
                 if (focusedButton.isSelected())
                     vision = new FocusedVision(player, map);
@@ -175,11 +176,7 @@ public class WSSGame {
                     Thread.sleep(turnSpeed);
                 
                     System.out.println("Turn " + turn);
-                
-                    int row = map.getPlayerRow();
-                    int col = map.getPlayerCol();
-                    Tile tile = map.getTile(row, col);
-                
+                                
                     // === Death check (only food or water) ===
                     if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
                         System.out.println("Player has died!");
@@ -195,8 +192,8 @@ public class WSSGame {
                         brain.makeMove();
                     }
                     
-                    mapPanel.redrawTiles();
-                    
+                    mapPanel.redrawPlayerMove(map.getPlayerRow(), map.getPlayerCol());
+
                     // Check if player has reached the last column
                     if (map.getPlayerCol() == map.getWidth() - 1) {
                         System.out.println("Congratulations! You survived and reached the end!");

@@ -6,9 +6,9 @@ import java.awt.*;
 
 public enum TerrainType {
     PLAINS(1, 1, 1, Color.GREEN),
-    FOREST(2, 1, 2, new Color(34, 139, 34)),
+    FOREST(1, 1, 2, new Color(34, 139, 34)),
     MOUNTAIN(3, 2, 2, Color.GRAY),
-    DESERT(2, 3, 1, Color.YELLOW),
+    DESERT(1, 3, 1, Color.YELLOW),
     SWAMP(2, 2, 3, new Color(47, 79, 79));
 
     private final int moveCost;

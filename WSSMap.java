@@ -60,8 +60,12 @@ public class WSSMap {
     }
 
     private void generateItems(Tile tile, Difficulty difficulty) {
-        if (random.nextInt(100) < 1) {
-            // tile.setTrader(new Trader()); // Placeholder for Trader feature
+        if (random.nextInt(101) < 5) {
+            if(random.nextInt(101) < 50){
+                tile.setTrader(new CheapTrader());
+            } else {
+                tile.setTrader(new ExpensiveTrader());
+            }
             return;
         }
 
@@ -117,8 +121,6 @@ public class WSSMap {
         if (newRow >= 0 && newRow < height && newCol >= 0 && newCol < width) {
             playerRow = newRow;
             playerCol = newCol;
-        } else {
-            System.out.println("Error: Player attempted to move out of bounds.");
         }
     }
 
