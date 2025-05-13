@@ -114,24 +114,7 @@ public void checkValues(int food, int water, int strength) {
     setCurrent_water(water);
     setCurrent_strength(strength);
 }
-/* 
-    public Offer suggestTrade(Trader trader, int offerFood, int offerWater, int offerGold, int wantFood, int wantWater, int wantGold ){
-        Offer offer = null;
-        if(trader.isTrading()){
-            offer = new Offer(offerFood, offerWater, offerGold, wantFood, wantWater, wantGold );
-        }
-        return offer;
-    }
 
-    public void acceptTrade(Offer trade){
-            if(trade != null){
-                setCurrent_food(getCurrent_food() + trade.getOfferFood());
-                setCurrent_water(getCurrent_water() + trade.getOfferWater());
-                setCurrent_gold(getCurrent_gold() + trade.getOfferGold());
-                checkValues(getCurrent_food(), getCurrent_water(), getCurrent_gold());
-            }
-    }
-*/
     public void rest(WSSMap map){
         setCurrent_strength(current_strength + 2);
         Tile currentTile = map.getTile(map.getPlayerRow(), map.getPlayerRow());
