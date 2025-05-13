@@ -70,25 +70,27 @@ public abstract class Trader {
 
     private boolean roll( int weight){
         int roll = random.nextInt(100);
-        boolean successful = false;
-        int firstLower = -1;
-        int firstUpper = 2;
-        int secondLower = 2;
-        int secondUpper = 4;
-        int ThirdUpper = 4;
-        int firstRoll= 40;
-        int secondRoll= 10;
-        int patienceMinus = 1;
+        boolean successful = false;                
+            int firstLower = 0;
+            int firstUpper = 3;
+            int secondLower = 3;
+            int secondUpper = 5;
+            int ThirdUpper = 5;
+            int firstRoll= 60;
+            int secondRoll= 40;
+            int patienceMinus = 1;
+            
 
         switch(type){
             case "Cheap": 
-                firstLower = 0;
-                firstUpper = 3;
-                secondLower = 3;
-                secondUpper = 5;
-                ThirdUpper = 5;
-                firstRoll= 60;
-                secondRoll= 40;
+             firstLower = -1;
+             firstUpper = 2;
+             secondLower = 2;
+             secondUpper = 4;
+             ThirdUpper = 4;
+             firstRoll= 40;
+             secondRoll= 10;
+             patienceMinus = 3;
                 break;
             case "Expensive": 
                 firstLower = 1;
@@ -96,6 +98,7 @@ public abstract class Trader {
                 secondLower = 4;
                 secondUpper = 6;
                 ThirdUpper = 6;
+                patienceMinus = 2;
                 break;
             default: break;
         }  
