@@ -90,7 +90,7 @@ public class BalancedBrain extends Brain {
                 }
             }
             if (dir == Direction.NORTH_EAST) {
-                tileConsideration = map.getRelativeTile(-1, 1);
+                tileConsideration = map.getRelativeTile(1, 1);
                 if (tileConsideration == null){
                     break;
                 }
@@ -103,7 +103,7 @@ public class BalancedBrain extends Brain {
                 }
             }
             if (dir == Direction.SOUTH_EAST) {
-                tileConsideration = map.getRelativeTile(1, 1);
+                tileConsideration = map.getRelativeTile(-1, 1);
                 if (tileConsideration == null){
                     break;
                 }
