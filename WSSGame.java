@@ -179,7 +179,11 @@ public class WSSGame {
                                 
                     // === Death check (only food or water) ===
                     if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
-                        System.out.println("Player has died!");
+                        if(player.getCurrent_food() <= 0){
+                        System.out.println("Player has starved to death!");
+                        } else {
+                        System.out.println("Player has died of dehydration!");
+                        }
                         break;
                     }
                 
