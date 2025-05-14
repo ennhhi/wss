@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class BalancedBrain extends Brain {
 
     private Path rememberedWaterPath = null;
@@ -9,7 +11,7 @@ public class BalancedBrain extends Brain {
 
     @Override
     protected double getResourceThreshold() {
-        return 0.5; // tries to keep above 50% of max resources
+        return 0.3; // tries to keep above 30% of max resources
     }
 
     @Override
@@ -21,29 +23,105 @@ public class BalancedBrain extends Brain {
 
     @Override
     protected Path choosePath() {
-        boolean needsWater = player.getCurrent_water() < (player.getMax_water() * getResourceThreshold());
-        boolean needsFood = player.getCurrent_food() < (player.getMax_food() * getResourceThreshold());
+        boolean needsWater = false;
+        boolean needsFood = false;
 
-        // Use remembered water/food paths if still valid/in-bounds:
-        if (needsWater && rememberedWaterPath != null && isValidPath(rememberedWaterPath)) {
+        //determine what resources are low
+        if (player.getCurrent_water() < player.getMax_water() * getResourceThreshold()){
+            System.out.println("Low on water, searching for water nearby");
+            needsWater = true;
+        }
+
+        if (player.getCurrent_food() < player.getMax_food() * getResourceThreshold()){
+            System.out.println("Low on food, searching for food nearby");
+            needsFood = true;
+        }
+
+        //scan for resources
+        Path rememberedFoodPath = vision.closestFood();
+        Path rememberedWaterPath = vision.closestWater();
+        if (rememberedWaterPath != null && needsWater) {
+            System.out.println("Water Spotted");
+        }
+        if (rememberedFoodPath != null && needsFood) {
+            System.out.println("Food Spotted");
+        }
+
+        //determine what to head towards
+
+        if (needsWater && needsFood && rememberedFoodPath != null && rememberedWaterPath != null){
+            if (player.getCurrent_water() < player.getCurrent_food()){  //tie-breaker of needing both
+                return rememberedWaterPath;
+            }
+            if (player.getCurrent_food() < player.getCurrent_water()){ //tie-breaker of needing both
+                return rememberedFoodPath;
+            }
+        }
+        if (needsWater){
             return rememberedWaterPath;
         }
-        if (needsFood && rememberedFoodPath != null && isValidPath(rememberedFoodPath)) {
+        if (needsFood) {
             return rememberedFoodPath;
         }
 
-        // Default to moving east, but only if in-bounds:
-        Tile eastTile = map.getRelativeTile(0, 1);
-        if (eastTile != null) {
-            return new Path(
-                java.util.List.of(Direction.EAST),
-                eastTile.getTerrain().getMoveCost(),
-                eastTile.getTerrain().getWaterCost(),
-                eastTile.getTerrain().getFoodCost()
-            );
-        }
+        //if no resources are needed, default to moving east
+        List<Direction> validMoves = vision.getValidNextMoves(); //(some combination of EAST. SOUTHEAST, NORTHEAST)
+        Tile tileConsideration;  //helper variable to fetch values
 
-        return null; // No valid move found
+        //stores information of lowest move cost tile
+        int lowestCost = 100; //sum of total move cost of water+str+food
+        int foodCost = 0;
+        int waterCost = 0;
+        Direction directionToMove = Direction.EAST; // EAST should be a valid move for all vision types
+        // NORTHEAST / SOUTHEAST may not be valid for some vision types,
+        // so we will check the array for them and consider them if they exist
+        for (Direction dir : validMoves){
+            if (dir == Direction.EAST){
+                tileConsideration = map.getRelativeTile(0, 1);
+                if (tileConsideration == null){
+                    break;
+                }
+                if (lowestCost > tileConsideration.getTerrain().getTotal_cost()){
+                    lowestCost = tileConsideration.getTerrain().getTotal_cost();
+                    foodCost = tileConsideration.getTerrain().getFoodCost();
+                    waterCost = tileConsideration.getTerrain().getWaterCost();
+                    System.out.println("Considering EAST with a total cost to move of " + tileConsideration.getTerrain().getTotal_cost());
+                    directionToMove = Direction.EAST;
+                }
+            }
+            if (dir == Direction.NORTH_EAST) {
+                tileConsideration = map.getRelativeTile(-1, 1);
+                if (tileConsideration == null){
+                    break;
+                }
+                if (lowestCost > tileConsideration.getTerrain().getTotal_cost()) {
+                    lowestCost = tileConsideration.getTerrain().getTotal_cost();
+                    foodCost = tileConsideration.getTerrain().getFoodCost();
+                    waterCost = tileConsideration.getTerrain().getWaterCost();
+                    System.out.println("Considering NORTHEAST with a total cost to move of " + tileConsideration.getTerrain().getTotal_cost());
+                    directionToMove = Direction.NORTH_EAST;
+                }
+            }
+            if (dir == Direction.SOUTH_EAST) {
+                tileConsideration = map.getRelativeTile(1, 1);
+                if (tileConsideration == null){
+                    break;
+                }
+                if (lowestCost > tileConsideration.getTerrain().getTotal_cost()) {
+                    lowestCost = tileConsideration.getTerrain().getTotal_cost();
+                    foodCost = tileConsideration.getTerrain().getFoodCost();
+                    waterCost = tileConsideration.getTerrain().getWaterCost();
+                    System.out.println("Considering SOUTHEAST with a total cost to move of " + tileConsideration.getTerrain().getTotal_cost());
+                    directionToMove = Direction.SOUTH_EAST;
+                }
+            }
+        }
+        //returns direction and costs
+        return new Path(
+                List.of(directionToMove),
+                lowestCost,
+                waterCost,
+                foodCost);
     }
 
     // Simple helper to ensure the path's first step is in-bounds
@@ -53,8 +131,8 @@ public class BalancedBrain extends Brain {
         return (target != null);
     }
 
-    @Override
-    public void makeMove() {
+    //@Override
+    /*public void makeMove() {
         if (player.getCurrent_food() <= 0 || player.getCurrent_water() <= 0) {
             //System.out.println("Player has died!"); //the print might be redundant as main() already does this
             System.exit(0);
@@ -116,8 +194,8 @@ public class BalancedBrain extends Brain {
             }
 
         } else {
-            System.out.println("BalancedBrain: No valid move. Resting this turn (+3 strength).");
+            System.out.println("BalancedBrain: No valid move. Resting this turn (+2 strength).");
             player.rest(map);
         }
-    }
+    }*/
 }

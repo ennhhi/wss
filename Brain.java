@@ -1,3 +1,5 @@
+import java.util.List;
+
 public abstract class Brain {
     protected Player player;
     protected Vision vision;
@@ -33,6 +35,7 @@ public abstract class Brain {
         // Choose path and move
         Path chosenPath = choosePath();
         if (chosenPath != null && chosenPath.getFirstStep() != null) {
+            System.out.println(chosenPath.getFirstStep());
             handleMovement(chosenPath);
         } else {
             handleNoPath();
@@ -52,8 +55,13 @@ public abstract class Brain {
     }
 
     private void restPlayer() {
-        System.out.println("Not enough strength to move. Resting this turn (+3 strength).");
+        System.out.println("Not enough strength to move. Resting this turn (+2 strength).");
         player.rest(map);
+        System.out.println("Player stats: " +
+                ", Strength:" + player.getCurrent_strength() +
+                ", Food:" + player.getCurrent_food() +
+                ", Water:" + player.getCurrent_water() +
+                ", Gold:" + player.getCurrent_gold());
     }
 
     private void handleMovement(Path path) {
@@ -73,8 +81,8 @@ public abstract class Brain {
         map.movePlayer(step);
         player.collect(target);
 
-        System.out.println("Player enters square " + map.getPlayerRow() + "," + map.getPlayerCol() +
-                ", Strength:" + player.getCurrent_strength() +
+        System.out.println("Player enters square (" + map.getPlayerRow() + "," + map.getPlayerCol() +
+                "): Strength:" + player.getCurrent_strength() +
                 ", Food:" + player.getCurrent_food() +
                 ", Water:" + player.getCurrent_water() +
                 ", Gold:" + player.getCurrent_gold());
@@ -90,8 +98,20 @@ public abstract class Brain {
     }
 
     private void handleNoPath() {
-        System.out.println("No valid path. Resting (+3 strength).");
-        restPlayer();
+        System.out.println("No valid path to resources.");
+        Tile target = map.getTileInDirection(Direction.EAST);
+
+        if (target.getTerrain().getMoveCost() < player.getCurrent_strength()){
+            handleMovement(new Path(
+                    List.of(Direction.EAST),
+                    target.getTerrain().getMoveCost(),
+                    target.getTerrain().getWaterCost(),
+                    target.getTerrain().getFoodCost()));
+        }
+        else {
+            restPlayer();
+        }
+
     }
 
     // Let each subclass decide how to pick a path

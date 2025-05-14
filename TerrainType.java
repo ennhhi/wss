@@ -15,6 +15,7 @@ public enum TerrainType {
     private final int waterCost;
     private final int foodCost;
     private final Color color;
+    private int total_cost;
 
     TerrainType(int moveCost, int waterCost, int foodCost, Color color) {
         this.moveCost = moveCost;
@@ -27,4 +28,5 @@ public enum TerrainType {
     public int getWaterCost() { return waterCost; }
     public int getFoodCost() { return foodCost; }
     public Color getColor() { return color; }
+    public int getTotal_cost(){return moveCost+waterCost+foodCost;}
 }
