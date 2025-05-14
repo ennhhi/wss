@@ -1,10 +1,6 @@
 import java.util.List;
 
 public class BalancedBrain extends Brain {
-
-    private Path rememberedWaterPath = null;
-    private Path rememberedFoodPath = null;
-
     public BalancedBrain(Player player, Vision vision, WSSMap map) {
         super(player, vision, map);
     }

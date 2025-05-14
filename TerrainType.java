@@ -15,7 +15,6 @@ public enum TerrainType {
     private final int waterCost;
     private final int foodCost;
     private final Color color;
-    private int total_cost;
 
     TerrainType(int moveCost, int waterCost, int foodCost, Color color) {
         this.moveCost = moveCost;

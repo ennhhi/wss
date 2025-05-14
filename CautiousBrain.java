@@ -2,10 +2,6 @@ import java.util.List;
 
 //keeps resources high
 public class CautiousBrain extends Brain{
-
-    private Path rememberedWaterPath = null;
-    private Path rememberedFoodPath = null;
-
     public CautiousBrain(Player player, Vision vision, WSSMap map) {
         super(player, vision, map);
     }

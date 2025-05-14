@@ -122,9 +122,9 @@ public class WSSGame {
                 else if (preparedButton.isSelected())
                     player = new PreparedPlayer();
                 else if (strongButton.isSelected())
-                    player = new StrongPlayer(15, 15, 30);
+                    player = new StrongPlayer();
                 else
-                    player = new RichPlayer(10, 10, 15);
+                    player = new RichPlayer();
 
                 map = new WSSMap(width, height, diff);
                 mapPanel = new MapPanel(map);

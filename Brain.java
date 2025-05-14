@@ -80,6 +80,7 @@ public abstract class Brain {
 
         map.movePlayer(step);
         player.collect(target);
+        checkTrade(target, player);
 
         System.out.println("Player enters square (" + map.getPlayerRow() + "," + map.getPlayerCol() +
                 "): Strength:" + player.getCurrent_strength() +
@@ -193,13 +194,24 @@ public abstract class Brain {
             if(trade == null){
                 System.out.println("Trader rejected trade");
             } else {
+                System.out.printf("Resouces before Trading: Food: %d, Water: %d, Gold: %d\n", player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_gold() );
+                System.out.println("Trading with trader");
                 int add_Food = player.getCurrent_food() + offer.getWantFood() - offer.getOfferFood();
                 int add_Water = player.getCurrent_water() + offer.getWantWater() - offer.getOfferWater();
                 player.setCurrent_food(add_Food);
                 player.setCurrent_water(add_Water);
                 player.setCurrent_gold(player.getCurrent_gold()-offer.getOfferGold());
                 player.checkValues(player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_strength());
+                System.out.println("Finished Trading");
+                System.out.printf("Resouces after Trading: Food: %d, Water: %d, Gold: %d\n", player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_gold() );
             }
+        }
+        
+    }
+
+    public void checkTrade(Tile tile, Player player){
+        if (tile.hasTrader() && player.getCurrent_gold() > 0){
+            makeTrade(tile.getTrader(), getResourceThreshold());
         }
     }
 }
