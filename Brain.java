@@ -117,10 +117,6 @@ public abstract class Brain {
         if (goldBefore > 0) System.out.println("Gained +" + goldBefore + " gold!");
         if (foodBefore > 0) System.out.println("Gained +" + foodBefore + " food!");
         if (waterBefore > 0) System.out.println("Gained +" + waterBefore + " water!");
-
-        if (target.hasTrader()) {
-            System.out.println("There is a trader here...");
-        }
     }
 
     private void handleNoPath() {
@@ -232,14 +228,13 @@ public abstract class Brain {
         }
         //If offer != we needed resouces and made a trade
         if(offer != null){
+            System.out.printf("Resources before Trading: Food: %d, Water: %d, Gold: %d\n", 
+            player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_gold());
+            System.out.println("Trading with trader");
             Offer trade = trader.evaluateTrade(offer);
             if(trade == null){
                 System.out.println("Trader rejected trade");
             } else {
-                System.out.printf("Resources before Trading: Food: %d, Water: %d, Gold: %d\n", 
-                    player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_gold());
-                
-                System.out.println("Trading with trader");
                 int add_Food = player.getCurrent_food() + trade.getWantFood();
                 int add_Water = player.getCurrent_water() + trade.getWantWater();
                 player.setCurrent_food(add_Food);
@@ -257,8 +252,12 @@ public abstract class Brain {
     }
 
     public void checkTrade(Tile tile, Player player){
-        if (tile.hasTrader() && player.getCurrent_gold() > 0){
-            makeTrade(tile.getTrader(), getResourceThreshold());
+        if (tile.hasTrader()){
+            System.out.println("There is a trader here...");
+            if( player.getCurrent_gold() > 0){
+                makeTrade(tile.getTrader(), getResourceThreshold());
+            }
         }
+
     }
 }
