@@ -106,7 +106,7 @@ public abstract class Brain {
 
         map.movePlayer(step);
         player.collect(target);
-        checkTrade(target, player);
+        checkTrade(target);
 
         System.out.println("Player enters square (" + map.getPlayerRow() + "," + map.getPlayerCol() +
                 "): Strength:" + player.getCurrent_strength() +
@@ -140,107 +140,134 @@ public abstract class Brain {
     protected abstract Path choosePath();
 
 
-    //Call function when there is a tile with a trader and is trading
+    
+    /**
+     * Function that is called inside checkTrade when there is a trader and player's gold is > 0
+     * Based on the threshold of the chosen brain type, the brain creates an offer 
+     * The offer is populated with what the player needs to get to the wanted resource threshold 
+     * The player offers other resouces if those resouces are above the needed threshold
+     * @param trader Trader to trade with
+     * @param threshold Resource threshold to compare to when populating the offer
+     */
     public void makeTrade(Trader trader, double threshold) {
         //The values we don't want to exceed
         double food_threshold = player.getMax_food()*threshold;
         double water_threshold = player.getMax_water()*threshold;
         int gold = player.getCurrent_gold();
+        //Offer to give to trader
         Offer offer = new Offer();
-        if(gold>0 && trader.isTrading()) {
-            String brainType = this.getClass().getSimpleName();
-            
-            //If brain is reckless (threshold = 0)
-            if(food_threshold==0 && water_threshold==0) {
-                if((gold/2) > (player.getMax_food() - player.getCurrent_food())) {
-                    int baseAmount = player.getMax_food() - player.getCurrent_food();
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantFood());
-                } else {
-                    int baseAmount = gold/2;
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantFood());
-                }
-                gold -= offer.getWantFood();
-                if((gold) > (player.getMax_water() - player.getCurrent_water())) {
-                    int baseAmount = player.getMax_water() - player.getCurrent_water();
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
-                } else {
-                    int baseAmount = gold;
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
-                }
-                gold -= offer.getWantWater();
-            }
-            //If we need food and water
-            else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold) {
-                if((gold/2) > food_threshold) {
-                    int baseAmount = (int)(food_threshold - player.getCurrent_food());
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantFood());
-                } else {
-                    int baseAmount = gold/2;
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantFood());
-                }
-                gold -= offer.getWantFood();
-                if((gold) > water_threshold) {
-                    int baseAmount = (int)(water_threshold - player.getCurrent_water());
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
-                } else {
-                    int baseAmount = gold;
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
-                }
-                gold -= offer.getWantWater();
-            }
-            //If we need food
-            else if(player.getCurrent_food() < food_threshold) {
-                if((gold) > (food_threshold - player.getCurrent_food())) {
-                    int baseAmount = (int)(food_threshold - player.getCurrent_food());
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantFood());
-                } else {
-                    int baseAmount = (int)(gold + (player.getCurrent_water() - water_threshold));
-                    offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(gold);
-                    offer.setOfferWater((int)(player.getCurrent_water() - water_threshold));
-                }
-            }
-            //If we need water
-            else if(player.getCurrent_water() < water_threshold) {
-                if((gold) > (water_threshold - player.getCurrent_water())) {
-                    int baseAmount = (int)(water_threshold - player.getCurrent_water());
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(offer.getWantWater());
-                } else {
-                    int baseAmount = (int)(gold + (player.getCurrent_food() - food_threshold));
-                    offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
-                    offer.setOfferGold(gold);
-                    offer.setOfferFood((int)(player.getCurrent_food() - food_threshold));
-                }
+        String brainType = this.getClass().getSimpleName();            
+        //If brain is reckless (threshold = 0)
+        if(food_threshold==0 && water_threshold==0) {
+            //Case for if half our gold, other half is for water, is more than the amount of food 
+            //we need in order to get to our threshold, which in this case is the max food 
+            if((gold/2) > (player.getMax_food() - player.getCurrent_food())) {
+                int baseAmount = player.getMax_food() - player.getCurrent_food();
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantFood());
+            //If we want more food than we have gold for, which is only half our total gold
+            //Then offer half our gold, other half is for water 
             } else {
-                //We don't need any resources
-                offer = null;
+                int baseAmount = gold/2;
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantFood());
+            }
+            gold -= offer.getWantFood();
+            //If remaining gold is more than we need, only ask for what we need to get to threshold(Max)
+            if((gold) > (player.getMax_water() - player.getCurrent_water())) {
+                int baseAmount = player.getMax_water() - player.getCurrent_water();
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
+            //If we do not have enough gold, offer up our remaining gold
+            } else {
+                int baseAmount = gold;
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
+            }
+            gold -= offer.getWantWater();
+        }
+        //If our threshold is not 0(Not reckless) compare current resouces with thresholds
+        //This case if for when we need both resources(both current resouces are below threshold)
+        else if(player.getCurrent_food() < food_threshold && player.getCurrent_water() < water_threshold) {
+            //If half our gold, other half is for water is more than what we need
+            //ask and offer for only what we need
+            if((gold/2) > food_threshold) {
+                int baseAmount = (int)(food_threshold - player.getCurrent_food());
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantFood());
+            //If we want more than half our gold, then ask and offer for half our gold
+            } else {
+                int baseAmount = gold/2;
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantFood());
+            }
+            gold -= offer.getWantFood();
+            //if we have more remaining gold then we want water
+            //ask and offer only what we need
+            if((gold) > water_threshold) {
+                int baseAmount = (int)(water_threshold - player.getCurrent_water());
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
+            //else ask and offer what we have remaining 
+            } else {
+                int baseAmount = gold;
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getOfferGold() + offer.getWantWater());
+            }
+            gold -= offer.getWantWater();
+        }
+        //If we only need food
+        else if(player.getCurrent_food() < food_threshold) {
+            //if gold is more than what we need, ask and offer what we need
+            if((gold) > (food_threshold - player.getCurrent_food())) {
+                int baseAmount = (int)(food_threshold - player.getCurrent_food());
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantFood());
+            //else ask and offer what we have
+            } else {
+                int baseAmount = (int)(gold + (player.getCurrent_water() - water_threshold));
+                offer.setWantFood(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(gold);
+                offer.setOfferWater((int)(player.getCurrent_water() - water_threshold));
             }
         }
+        //If we only need water
+        else if(player.getCurrent_water() < water_threshold) {
+            //if gold is more than what we need, ask and offer what we need
+            if((gold) > (water_threshold - player.getCurrent_water())) {
+                int baseAmount = (int)(water_threshold - player.getCurrent_water());
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(offer.getWantWater());
+            //else ask and offer what we have
+            } else {
+                int baseAmount = (int)(gold + (player.getCurrent_food() - food_threshold));
+                offer.setWantWater(calculateRandomTradeAmount(baseAmount, brainType));
+                offer.setOfferGold(gold);
+                offer.setOfferFood((int)(player.getCurrent_food() - food_threshold));
+            }
+        } else {
+            //We don't need any resources
+            offer = null;
+        }            
         //If offer != we needed resouces and made a trade
         if(offer != null){
             System.out.printf("Resources before Trading: Food: %d, Water: %d, Gold: %d\n", 
             player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_gold());
             System.out.println("Trading with trader");
+            //Trader will evaluate the trade and decide if he will accept
             Offer trade = trader.evaluateTrade(offer);
+            //Will be null if he rejects
             if(trade == null){
                 System.out.println("Trader rejected trade");
+            //Otherwise add and subtract the resources from the offer to the player
             } else {
                 int add_Food = player.getCurrent_food() + trade.getWantFood();
                 int add_Water = player.getCurrent_water() + trade.getWantWater();
                 player.setCurrent_food(add_Food);
                 player.setCurrent_water(add_Water);
                 player.setCurrent_gold(player.getCurrent_gold() - trade.getOfferGold());
-        
+                
+                //Check bounds
                 player.checkValues(player.getCurrent_food(), player.getCurrent_water(), player.getCurrent_strength(), player.getCurrent_gold());
         
                 System.out.println("Finished Trading");
@@ -251,7 +278,13 @@ public abstract class Brain {
 
     }
 
-    public void checkTrade(Tile tile, Player player){
+    /**
+     * CheckTrade checks if the tile has an avaliable trader
+     * Then it checks if the player has any gold to trade with
+     * If so, it makes a trade
+     * @param tile Tile to be checked for traders
+     */
+    public void checkTrade(Tile tile){
         if (tile.hasTrader()){
             System.out.println("There is a trader here...");
             if( player.getCurrent_gold() > 0){
