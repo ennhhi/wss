@@ -50,9 +50,12 @@ public abstract class Trader {
         } else if(patienceLevel > 0){
             System.out.println("Trade rejected; generating counteroffer.");
             trade = generateCounterOffer(offer, netGain);
-            System.out.printf("Counteroffer - Player gets Food: %d, Water: %d, Pays Gold: %d%n",
-                trade.getWantFood(), trade.getWantWater(), trade.getOfferGold());
-            System.out.println("Remaining patience level: " + patienceLevel);
+            
+            if (trade != null) {
+                System.out.printf("Counteroffer - Player gets Food: %d, Water: %d, Pays Gold: %d%n",
+                    trade.getWantFood(), trade.getWantWater(), trade.getOfferGold());
+                System.out.println("Remaining patience level: " + patienceLevel);
+            }
         } else {
             System.out.println("Trader has no patience left and quits negotiation.");
             quitNegotiation();
