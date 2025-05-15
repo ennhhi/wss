@@ -20,6 +20,7 @@ public abstract class Brain {
     protected abstract double getResourceThreshold();
     protected abstract int getMinStrengthToMove();
 
+    //Calculate random trade amount based on brain type
     protected int calculateRandomTradeAmount(int baseAmount, String brainType) {
         Random random = new Random();
         double multiplier;

@@ -26,7 +26,7 @@ public abstract class Trader {
         isTrading = true;
         this.type = type;
     }
-
+//Evaluate trade works first on offering, then wants  
     public Offer evaluateTrade(Offer offer){
         if(offer == null || !isTrading){
             System.out.println("Trade evaluation aborted: Invalid offer or trader stopped trading.");
@@ -96,10 +96,11 @@ public abstract class Trader {
                 firstRoll = 50; secondRoll = 30;
                 break;
         }
-
+        //if the net gain is between the firstLower and firstUpper then roll a random int and compare to firstRoll
         boolean successful = false;
         if(firstLower <= weight && weight < firstUpper){
             successful = roll >= firstRoll;
+        //else if the net gain is between the secondLower and secondUpper then roll a random int and compare to secondRoll
         } else if(secondLower <= weight && weight < secondUpper){
             successful = roll >= secondRoll;
         } else if(weight >= thirdUpper){
@@ -112,7 +113,7 @@ public abstract class Trader {
 
         return successful;
     }
-
+//Counter offers typically come from expensive traders due to their higher patience levels and price
     private Offer generateCounterOffer(Offer offer, int netGain){
         int adjustment = type.equals("Expensive") ? 2 : 1;
     
