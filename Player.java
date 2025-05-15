@@ -100,20 +100,22 @@ public abstract class Player {
             tile.setGold(0);
         }
 
-        checkValues(current_food, current_water, current_strength);
+        checkValues(current_food, current_water, current_strength, current_gold);
     }
 
-public void checkValues(int food, int water, int strength) {
-    if (food > max_food) food = max_food;
-    if (water > max_water) water = max_water;
-    if (strength > max_strength) strength = max_strength;
-    if (food < 0) food = 0;
-    if (water < 0) water = 0;
+    public void checkValues(int food, int water, int strength, int gold) {
+        if (food > max_food) food = max_food;
+        if (water > max_water) water = max_water;
+        if (strength > max_strength) strength = max_strength;
+        if (food < 0) food = 0;
+        if (water < 0) water = 0;
+        if (gold < 0) gold = 0;
 
-    setCurrent_food(food);
-    setCurrent_water(water);
-    setCurrent_strength(strength);
-}
+        setCurrent_food(food);
+        setCurrent_water(water);
+        setCurrent_strength(strength);
+        setCurrent_gold(gold);
+    }
 
     public void rest(WSSMap map){
         if (current_strength<max_strength){

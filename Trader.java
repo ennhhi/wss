@@ -17,7 +17,7 @@ public abstract class Trader {
         isTrading = true;
         type="";
     }
-    
+
     public Trader(int patienceLevel, int food, int water, int gold, String type){
         this.patienceLevel = patienceLevel;
         this.food = food;
@@ -28,108 +28,124 @@ public abstract class Trader {
     }
 
     public Offer evaluateTrade(Offer offer){
-        int weight=0;
-        boolean successful=false;
-        Offer trade = null;
-        if(offer==null){
+        if(offer == null || !isTrading){
+            System.out.println("Trade evaluation aborted: Invalid offer or trader stopped trading.");
             return null;
         }
 
-        if(offer.getOfferFood() >=0 && offer.getOfferWater() >=0 && offer.getOfferGold() >=0 
-        && offer.getWantFood()  >=0 && offer.getWantWater()  >=0 && offer.getWantGold()  >=0 ){
+        System.out.println("Evaluating trade...");
+        System.out.printf("Player Offers - Food: %d, Water: %d, Gold: %d%n", 
+            offer.getOfferFood(), offer.getOfferWater(), offer.getOfferGold());
+        System.out.printf("Player Wants - Food: %d, Water: %d, Gold: %d%n",
+            offer.getWantFood(), offer.getWantWater(), offer.getWantGold());
 
-            //weight is the net gain for the trader between what the player is offering and what the player wants
-            weight+= offer.getOfferFood()-offer.getWantFood();
-            weight+= offer.getOfferWater()-offer.getWantWater();
-            weight+= offer.getOfferGold()-offer.getWantGold();
-            
-            successful = roll(weight);
+        int netGain = calculateNetGain(offer);
+        boolean successful = roll(netGain);
+        Offer trade;
 
-            if(successful){
-                trade=new Offer();
-                trade.setOfferFood(offer.getWantFood()-offer.getOfferFood());
-                trade.setOfferWater(offer.getWantWater()-offer.getOfferWater());
-                trade.setOfferGold(offer.getWantGold()-offer.getOfferGold());
-            } else {
-                trade = new Offer();
-                while(weight<=3){
-                    trade.setOfferFood(offer.getWantFood()-offer.getOfferFood()-1);
-                    trade.setOfferWater(offer.getWantWater()-offer.getOfferWater()-1);
-                    trade.setOfferGold(offer.getWantGold()-offer.getOfferGold()-1);
-                    weight+=3;
-                }
-                patienceLevel-=1;
-            }
+        if(successful && netGain >= 0){
+            System.out.println("Trade accepted by trader.");
+            trade = new Offer(offer.getWantFood(), offer.getWantWater(), 0, offer.getOfferFood(), offer.getOfferWater(), offer.getOfferGold());
+
+        } else if(patienceLevel > 0){
+            System.out.println("Trade rejected; generating counteroffer.");
+            trade = generateCounterOffer(offer, netGain);
+            System.out.printf("Counteroffer - Player gets Food: %d, Water: %d, Pays Gold: %d%n",
+                trade.getWantFood(), trade.getWantWater(), trade.getOfferGold());
+            System.out.println("Remaining patience level: " + patienceLevel);
         } else {
-            patienceLevel-=1;
-        }
-        if(patienceLevel<=0 ){
+            System.out.println("Trader has no patience left and quits negotiation.");
             quitNegotiation();
+            trade = null;
         }
+
         return trade;
     }
 
-    private boolean roll( int weight){
+    private int calculateNetGain(Offer offer){
+        int weight = (offer.getOfferFood() - offer.getWantFood()) +
+                     (offer.getOfferWater() - offer.getWantWater()) +
+                     (offer.getOfferGold() - offer.getWantGold());
+        return weight;
+    }
+
+    private boolean roll(int weight){
         int roll = random.nextInt(101);
-        boolean successful = false;                
-            int firstLower = 0;
-            int firstUpper = 3;
-            int secondLower = 3;
-            int secondUpper = 5;
-            int ThirdUpper = 5;
-            int firstRoll= 60;
-            int secondRoll= 40;
-            int patienceMinus = 1;
-            
+        int patienceMinus = 1;
+        int firstLower, firstUpper, secondLower, secondUpper, thirdUpper, firstRoll, secondRoll;
 
         switch(type){
-            case "Cheap": 
-             firstLower = -1;
-             firstUpper = 2;
-             secondLower = 2;
-             secondUpper = 4;
-             ThirdUpper = 4;
-             firstRoll= 40;
-             secondRoll= 10;
-             patienceMinus = 3;
+            case "Cheap":
+                firstLower = -1; firstUpper = 2;
+                secondLower = 2; secondUpper = 4;
+                thirdUpper = 4;
+                firstRoll = 40; secondRoll = 10;
+                patienceMinus = 3;
                 break;
-            case "Expensive": 
-                firstLower = 1;
-                firstUpper = 4;
-                secondLower = 4;
-                secondUpper = 6;
-                ThirdUpper = 6;
+            case "Expensive":
+                firstLower = 1; firstUpper = 4;
+                secondLower = 4; secondUpper = 6;
+                thirdUpper = 6;
+                firstRoll = 60; secondRoll = 40;
                 patienceMinus = 2;
                 break;
-            default: break;
-        }  
-
-        //if the net gain is between the firstLower and firstUpper then roll a random int and compare to firstRoll
-        if(firstLower <= weight && weight < firstUpper){
-            if(roll>=firstRoll){
-                successful=true;
-            } else {
-                patienceLevel-=patienceMinus;
-            }
-        //else if the net gain is between the secondLower and secondUpper then roll a random int and compare to secondRoll
-        } else if(secondLower <= weight && weight < secondUpper){
-            if(roll>=secondRoll){
-                successful=true;
-            }
-        //if the net gain is above the thirdUpper unconditionally accept
-        } else if(weight >= ThirdUpper){
-            successful=true;
-        } else {
-            //if the net gain is too low, minus patience
-            patienceLevel-=patienceMinus;
+            default:
+                firstLower = 0; firstUpper = 3;
+                secondLower = 3; secondUpper = 5;
+                thirdUpper = 5;
+                firstRoll = 50; secondRoll = 30;
+                break;
         }
+
+        boolean successful = false;
+        if(firstLower <= weight && weight < firstUpper){
+            successful = roll >= firstRoll;
+        } else if(secondLower <= weight && weight < secondUpper){
+            successful = roll >= secondRoll;
+        } else if(weight >= thirdUpper){
+            successful = true;
+        }
+
+        if(!successful){
+            patienceLevel -= patienceMinus;
+        }
+
         return successful;
     }
 
-    public void counterOffer(){
-        
-    }
+    private Offer generateCounterOffer(Offer offer, int netGain){
+        int adjustment = type.equals("Expensive") ? 2 : 1;
     
+        Offer counter = new Offer();
+    
+        int requestedFood = Math.max(offer.getWantFood() - adjustment, 0);
+        int requestedWater = Math.max(offer.getWantWater() - adjustment, 0);
+        
+        // Only charge gold if at least one resource is offered
+        int requiredGold = (requestedFood + requestedWater) > 0 ? requestedFood + requestedWater + adjustment : 0;
+    
+        // Avoid scenario where player pays gold for nothing
+        if(requiredGold == 0){
+            System.out.println("Trader cannot make a valid counteroffer without resources. Negotiation stops.");
+            quitNegotiation();
+            return null;
+        }
+    
+        counter.setWantFood(requestedFood);
+        counter.setWantWater(requestedWater);
+        counter.setOfferGold(Math.min(requiredGold, gold));
+    
+        patienceLevel--;
+        System.out.println("Patience decreased to: " + patienceLevel);
+    
+        if(patienceLevel <= 0){
+            System.out.println("Patience exhausted; trader quits negotiation.");
+            quitNegotiation();
+        }
+    
+        return counter;
+    }
+
     public void quitNegotiation(){
         isTrading=false;
     }
@@ -137,7 +153,7 @@ public abstract class Trader {
     public int getPatienceLevel() {
         return patienceLevel;
     }
-    
+
     public void setPatienceLevel(int patienceLevel) {
         this.patienceLevel = patienceLevel;
     }
