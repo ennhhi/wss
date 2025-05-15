@@ -120,7 +120,6 @@ public abstract class Brain {
 
         if (target.hasTrader()) {
             System.out.println("There is a trader here...");
-            makeTrade(target.getTrader(), 0.0);
         }
     }
 
