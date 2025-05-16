@@ -68,7 +68,7 @@ public class WSSGame {
             brainButtons.add(cautiousBrainButton);
             brainButtons.add(recklessBrainButton);
 
-            JSlider speedSlider = new JSlider(0, 3000, 2000);
+            JSlider speedSlider = new JSlider(500, 3000, 1500);
             speedSlider.setMajorTickSpacing(500);
             speedSlider.setSnapToTicks(true);
             speedSlider.setPaintTicks(true);
