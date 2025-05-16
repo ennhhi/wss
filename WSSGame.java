@@ -172,7 +172,7 @@ public class WSSGame {
 
         new Thread(() -> {
             try {
-                for (int turn = 1; turn <= 50; turn++) {
+                for (int turn = 1; turn <= 100; turn++) {
                     Thread.sleep(turnSpeed);
                 
                     System.out.println("Turn " + turn);

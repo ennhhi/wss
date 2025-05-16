@@ -60,7 +60,11 @@ public class WSSMap {
     }
 
     private void generateItems(Tile tile, Difficulty difficulty) {
-        if (random.nextInt(101) < 5) {
+        int addTraderRate=0;
+        if(width > 30){
+            addTraderRate=15;
+        }
+        if (random.nextInt(101) < (10+addTraderRate)) {
             if(random.nextInt(101) < 50){
                 tile.setTrader(new CheapTrader());
             } else {
@@ -72,11 +76,14 @@ public class WSSMap {
         int foodBonus = 0, waterBonus = 0, goldBonus = 0;
         boolean repeatableFood = false, repeatableWater = false, repeatableGold = false;
         int itemRate;
-
+        int addItemRate=0;
+        if(width >30){
+            addItemRate = 10;
+        }
         switch (difficulty) {
-            case EASY -> itemRate = 20;
-            case MEDIUM -> itemRate = 12;
-            case HARD -> itemRate = 8;
+            case EASY -> itemRate = 10+addItemRate;
+            case MEDIUM -> itemRate = 20+addItemRate;
+            case HARD -> itemRate = 30+addItemRate;
             default -> itemRate = 0;
         }
 
