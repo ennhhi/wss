@@ -55,11 +55,11 @@ public abstract class Vision {
     }
 
     private Direction offsetToDirection(int rowOff, int colOff) {
-        if (rowOff == -1 && colOff == 0) return Direction.NORTH;
-        if (rowOff == 1 && colOff == 0) return Direction.SOUTH;
+        if (rowOff == 1 && colOff == 0) return Direction.NORTH;
+        if (rowOff == -1 && colOff == 0) return Direction.SOUTH;
         if (rowOff == 0 && colOff == 1) return Direction.EAST;
-        if (rowOff == -1 && colOff == 1) return Direction.NORTH_EAST;
-        if (rowOff == 1 && colOff == 1) return Direction.SOUTH_EAST;
+        if (rowOff == 1 && colOff == 1) return Direction.NORTH_EAST;
+        if (rowOff == -1 && colOff == 1) return Direction.SOUTH_EAST;
         return Direction.EAST; // fallback
     }
 
