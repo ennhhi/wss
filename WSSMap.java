@@ -81,9 +81,9 @@ public class WSSMap {
             addItemRate = 10;
         }
         switch (difficulty) {
-            case EASY -> itemRate = 10+addItemRate;
+            case EASY -> itemRate = 30+addItemRate;
             case MEDIUM -> itemRate = 20+addItemRate;
-            case HARD -> itemRate = 30+addItemRate;
+            case HARD -> itemRate = 10+addItemRate;
             default -> itemRate = 0;
         }
 
